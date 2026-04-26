@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Portfolio — Access Required</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a08;
+    --surface: #111110;
+    --border: #2a2a26;
+    --border-hover: #444440;
+    --text: #e8e6df;
+    --muted: #6a6860;
+    --accent: #c8b87a;
+    --accent-dim: #6b5e35;
+    --reveal-bg: #1a1a16;
+    --danger: #c87a7a;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── GATE SCREEN ── */
+  #gate {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  .gate-icon {
+    font-size: 2rem;
+    opacity: 0.6;
+    letter-spacing: -2px;
+  }
+
+  .gate-title {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: 0.15em;
+    text-align: center;
+  }
+
+  .gate-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-align: center;
+    max-width: 360px;
+  }
+
+  .gate-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .gate-input-wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  #pw-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    letter-spacing: 0.1em;
+    outline: none;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+  #pw-input::placeholder { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em; }
+  #pw-input:focus { border-color: var(--accent-dim); }
+  #pw-input.error { border-color: var(--danger); animation: shake 0.3s ease; }
+
+  #toggle-vis {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 0;
+    transition: color 0.2s;
+  }
+  #toggle-vis:hover { color: var(--text); }
+
+  #enter-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #enter-btn:hover { border-color: var(--accent-dim); background: rgba(200,184,122,0.05); }
+
+  .error-msg {
+    font-size: 0.72rem;
+    color: var(--danger);
+    letter-spacing: 0.05em;
+    min-height: 1rem;
+    transition: opacity 0.2s;
+  }
+
+  /* ── PORTFOLIO SCREEN ── */
+  #portfolio {
+    display: none;
+    min-height: 100vh;
+    padding: 3rem 1.5rem 5rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .port-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .port-name {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.35rem;
+  }
+
+  .port-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  /* ── PROJECT ITEMS ── */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 3rem;
+  }
+
+  .project-item {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+
+  .project-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-title {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .project-tag {
+    font-size: 0.65rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .project-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+
+  /* spoiler link */
+  .spoiler-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .spoiler-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .spoiler-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--reveal-bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .spoiler-btn:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .spoiler-hidden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+    word-break: break-all;
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.25s, max-width 0.3s;
+    pointer-events: none;
+  }
+  .spoiler-hidden.revealed {
+    opacity: 1;
+    max-width: 600px;
+    pointer-events: auto;
+  }
+  .spoiler-hidden:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  .port-footer {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    line-height: 2;
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     GATE SCREEN
+════════════════════════════════ -->
+<section id="gate">
+  <div class="gate-icon">🗝</div>
+  <div>
+    <div class="gate-title">Private Portfolio</div>
+  </div>
+  <p class="gate-sub">
+    This page contains protected project links.<br>
+    Enter the access password to continue.
+  </p>
+  <div class="gate-form">
+    <div class="gate-input-wrap">
+      <input id="pw-input" type="password" placeholder="enter password" autocomplete="off" spellcheck="false" />
+      <button id="toggle-vis" type="button" title="show/hide">show</button>
+    </div>
+    <button id="enter-btn" type="button">→ unlock</button>
+    <div class="error-msg" id="err-msg"></div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     PORTFOLIO SCREEN
+════════════════════════════════ -->
+<main id="portfolio">
+
+  <div class="port-header">
+    <div class="port-name">Asiye Özsoy</div>
+    <div class="port-desc">2D Animator · Slot Game UI · Spine2D / After Effects</div>
+  </div>
+
+  <div class="section-label">Selected Work — Private Links</div>
+
+  <div class="project-list">
+
+    <!-- ── PROJECT 1 ── -->
+    <div class="project-item">
+      <div class="project-top">
+        <div class="project-title">The Tipsy Tourist — Slot Game</div>
+        <span class="project-tag">Spine2D · Slot UI</span>
+      </div>
+      <div class="project-desc">Full slot game animation set — character rigs, win sequences, UI motion. Behance case study.</div>
+      <div class="spoiler-wrap">
+        <span class="spoiler-label">link →</span>
+        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
+        <a class="spoiler-hidden" href="https://www.behance.net/gallery/174807313/The-Tipsy-Tourist-slot-game" target="_blank" rel="noopener">
+          behance.net · The Tipsy Tourist ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 2 ── -->
+    <div class="project-item">
+      <div class="project-top">
+        <div class="project-title">Heist Bank Rush — Slot Game</div>
+        <span class="project-tag">Spine2D · Character Anim</span>
+      </div>
+      <div class="project-desc">Heist-themed slot game animations — full character & environment motion design. Behance case study.</div>
+      <div class="spoiler-wrap">
+        <span class="spoiler-label">link →</span>
+        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
+        <a class="spoiler-hidden" href="https://www.behance.net/gallery/212545555/HEIST-BANK-RUSH-slot-game" target="_blank" rel="noopener">
+          behance.net · Heist Bank Rush ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 3 ── -->
+    <div class="project-item">
+      <div class="project-top">
+        <div class="project-title">Stampede Gold — Slot Game</div>
+        <span class="project-tag">Spine2D · Motion Design</span>
+      </div>
+      <div class="project-desc">Wild west stampede slot — animal rigs, particle effects, win animations. Behance case study.</div>
+      <div class="spoiler-wrap">
+        <span class="spoiler-label">link →</span>
+        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
+        <a class="spoiler-hidden" href="https://www.behance.net/gallery/212461917/STAMPEDE-GOLD-slot-game" target="_blank" rel="noopener">
+          behance.net · Stampede Gold ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 4 ── -->
+    <div class="project-item">
+      <div class="project-top">
+        <div class="project-title">Animation Reel</div>
+        <span class="project-tag">After Effects · Reel</span>
+      </div>
+      <div class="project-desc">Motion reel showcasing game UI animations, character work and slot game sequences.</div>
+      <div class="spoiler-wrap">
+        <span class="spoiler-label">link →</span>
+        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
+        <a class="spoiler-hidden" href="https://youtu.be/Pr6QQmTNowI?si=yQb5KTV17r4hBfu9" target="_blank" rel="noopener">
+          youtube · Animation Reel ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- ── ADD MORE PROJECTS BELOW THIS LINE ── -->
+
+  </div>
+
+  <div class="port-footer">
+    <div>Available for freelance projects &amp; collaborations.</div>
+    <div>Contact: asiyeaydinlinetwork@gmail.com</div>
+    <div style="margin-top:1rem; color: #3a3a36;">
+      This page is password protected and intended for professional contacts only.
+    </div>
+  </div>
+
+</main>
+
+
+<script>
+  /* ── PASSWORD CONFIG ── */
+  const PASSWORD = "dqd7LU44e3z";
+
+  /* ── GATE LOGIC ── */
+  const gate = document.getElementById('gate');
+  const portfolio = document.getElementById('portfolio');
+  const input = document.getElementById('pw-input');
+  const btn = document.getElementById('enter-btn');
+  const errMsg = document.getElementById('err-msg');
+  const toggleVis = document.getElementById('toggle-vis');
+
+  function unlock() {
+    if (input.value === PASSWORD) {
+      gate.style.display = 'none';
+      portfolio.style.display = 'block';
+      portfolio.classList.add('fade-in');
+      sessionStorage.setItem('pf_unlocked', '1');
+    } else {
+      errMsg.textContent = 'incorrect password.';
+      input.classList.add('error');
+      input.value = '';
+      setTimeout(() => {
+        input.classList.remove('error');
+        errMsg.textContent = '';
+      }, 2000);
+    }
+  }
+
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlock(); });
+
+  toggleVis.addEventListener('click', () => {
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    toggleVis.textContent = isHidden ? 'hide' : 'show';
+  });
+
+  /* session persistence: stay unlocked on page refresh */
+  if (sessionStorage.getItem('pf_unlocked') === '1') {
+    gate.style.display = 'none';
+    portfolio.style.display = 'block';
+  }
+
+  /* ── SPOILER REVEAL ── */
+  function revealLink(btn) {
+    const link = btn.nextElementSibling;
+    btn.style.display = 'none';
+    link.classList.add('revealed');
+  }
+</script>
+</body>
+</html>
