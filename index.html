@@ -275,6 +275,39 @@
   }
   .spoiler-hidden:hover { text-decoration: underline; }
 
+  /* ── PASSWORD HINT BUTTON ── */
+  .pw-hint-wrap {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pw-hint-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .pw-hint-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+  .pw-hint-text {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s, max-height 0.3s;
+    text-align: center;
+  }
+  .pw-hint-text.visible { opacity: 1; max-height: 2rem; }
+
   /* ── FOOTER ── */
   .port-footer {
     font-size: 0.65rem;
@@ -322,6 +355,14 @@
     <button id="enter-btn" type="button">→ unlock</button>
     <div class="error-msg" id="err-msg"></div>
   </div>
+
+  <div class="pw-hint-wrap">
+    <button class="pw-hint-btn" onclick="this.style.display='none'; document.getElementById('pw-hint-text').classList.add('visible')">
+      🗝 show password
+    </button>
+    <div class="pw-hint-text" id="pw-hint-text">dqd7LU44e3z</div>
+  </div>
+
 </section>
 
 
@@ -332,10 +373,13 @@
 
   <div class="port-header">
     <div class="port-name">Asiye Özsoy</div>
-    <div class="port-desc">2D Animator · Slot Game UI · Spine2D / After Effects</div>
+    <div class="port-desc">2D Animator · Slot Game Animation Projects · Spine2D / After Effects / VFX </div>
   </div>
 
   <div class="section-label">Selected Work — Private Links</div>
+  <div style="font-size:0.7rem; color: var(--accent-dim); letter-spacing:0.05em; margin-bottom:1.5rem; font-family:'IBM Plex Sans',sans-serif;">
+    🔑 All Behance projects use the same password: <span style="color:var(--accent);">dqd7LU44e3z</span>
+  </div>
 
   <div class="project-list">
 
@@ -343,9 +387,9 @@
     <div class="project-item">
       <div class="project-top">
         <div class="project-title">The Tipsy Tourist — Slot Game</div>
-        <span class="project-tag">Spine2D · Slot UI</span>
+        <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc">Full slot game animation set — character rigs, win sequences, UI motion. Behance case study.</div>
+      <div class="project-desc"> Slot game animations - animated by me </div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -359,9 +403,9 @@
     <div class="project-item">
       <div class="project-top">
         <div class="project-title">Heist Bank Rush — Slot Game</div>
-        <span class="project-tag">Spine2D · Character Anim</span>
+        <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc">Heist-themed slot game animations — full character & environment motion design. Behance case study.</div>
+      <div class="project-desc"> Slot game animations - animated by me </div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -375,9 +419,9 @@
     <div class="project-item">
       <div class="project-top">
         <div class="project-title">Stampede Gold — Slot Game</div>
-        <span class="project-tag">Spine2D · Motion Design</span>
+        <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc">Wild west stampede slot — animal rigs, particle effects, win animations. Behance case study.</div>
+      <div class="project-desc"> Slot game animations - animated by me </div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -390,15 +434,15 @@
     <!-- ── PROJECT 4 ── -->
     <div class="project-item">
       <div class="project-top">
-        <div class="project-title">Animation Reel</div>
-        <span class="project-tag">After Effects · Reel</span>
+        <div class="project-title">Gold Nugget Rush — Slot Game</div>
+        <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc">Showcasing game symbol animations, character work and slot game sequences.</div>
+      <div class="project-desc"> Slot game animations - animated by me </div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
         <a class="spoiler-hidden" href="https://www.behance.net/gallery/248279533/Gold-Nugget-Rush-slot-game" target="_blank" rel="noopener">
-          Gold Nugget Rush | slot game ↗
+          behance.net · Gold Nugget Rush ↗
         </a>
       </div>
     </div>
