@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Portfolio — Access Required</title>
+<title>Private Portfolio — Asiye Özsoy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -20,6 +20,7 @@
     --accent-dim: #6b5e35;
     --reveal-bg: #1a1a16;
     --danger: #c87a7a;
+    --green: #7ac87a;
   }
 
   html, body {
@@ -31,22 +32,20 @@
     line-height: 1.6;
   }
 
-  /* ── GATE SCREEN ── */
-  #gate {
+  /* ════════════════════════
+     SHARED GATE STYLES
+  ════════════════════════ */
+  .screen {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    gap: 2rem;
+    gap: 1.75rem;
   }
 
-  .gate-icon {
-    font-size: 2rem;
-    opacity: 0.6;
-    letter-spacing: -2px;
-  }
+  .gate-icon { font-size: 2rem; opacity: 0.6; }
 
   .gate-title {
     font-size: clamp(1rem, 3vw, 1.25rem);
@@ -59,41 +58,46 @@
   .gate-sub {
     font-size: 0.75rem;
     color: var(--muted);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-align: center;
     max-width: 360px;
+    line-height: 1.7;
   }
 
   .gate-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
     width: 100%;
     max-width: 320px;
   }
 
-  .gate-input-wrap {
-    width: 100%;
-    position: relative;
+  .field-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
   }
 
-  #pw-input {
+  .field-wrap { position: relative; }
+
+  .gate-input {
     width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 1rem;
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
-    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    letter-spacing: 0.05em;
     outline: none;
     border-radius: 2px;
     transition: border-color 0.2s;
   }
-  #pw-input::placeholder { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em; }
-  #pw-input:focus { border-color: var(--accent-dim); }
-  #pw-input.error { border-color: var(--danger); animation: shake 0.3s ease; }
+  .gate-input::placeholder { color: var(--muted); font-size: 0.8rem; }
+  .gate-input:focus { border-color: var(--accent-dim); }
+  .gate-input.error { border-color: var(--danger); animation: shake 0.3s ease; }
 
   #toggle-vis {
     position: absolute;
@@ -104,14 +108,14 @@
     border: none;
     color: var(--muted);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-family: 'IBM Plex Mono', monospace;
     padding: 0;
     transition: color 0.2s;
   }
   #toggle-vis:hover { color: var(--text); }
 
-  #enter-btn {
+  .gate-btn {
     width: 100%;
     background: transparent;
     border: 1px solid var(--border);
@@ -124,30 +128,100 @@
     cursor: pointer;
     border-radius: 2px;
     transition: border-color 0.2s, background 0.2s;
+    margin-top: 0.25rem;
   }
-  #enter-btn:hover { border-color: var(--accent-dim); background: rgba(200,184,122,0.05); }
+  .gate-btn:hover { border-color: var(--accent-dim); background: rgba(200,184,122,0.05); }
+  .gate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .error-msg {
+  .status-msg {
     font-size: 0.72rem;
-    color: var(--danger);
     letter-spacing: 0.05em;
     min-height: 1rem;
-    transition: opacity 0.2s;
+    text-align: center;
   }
+  .status-msg.error { color: var(--danger); }
+  .status-msg.success { color: var(--green); }
 
-  /* ── PORTFOLIO SCREEN ── */
+  /* hint button */
+  .pw-hint-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pw-hint-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .pw-hint-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
+  .pw-hint-text {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s, max-height 0.3s;
+    text-align: center;
+  }
+  .pw-hint-text.visible { opacity: 1; max-height: 2rem; }
+
+  /* ════════════════════════
+     PORTFOLIO SCREEN
+  ════════════════════════ */
   #portfolio {
     display: none;
     min-height: 100vh;
     padding: 3rem 1.5rem 5rem;
     max-width: 680px;
     margin: 0 auto;
+    position: relative;
   }
 
+  /* ── AVAILABLE BADGE ── */
+  .badge-available {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 100;
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── HEADER ── */
   .port-header {
     border-bottom: 1px solid var(--border);
     padding-bottom: 1.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
   }
 
   .port-name {
@@ -161,18 +235,59 @@
   .port-desc {
     font-size: 0.75rem;
     color: var(--muted);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 300;
   }
 
+  /* ── ABOUT ── */
+  .about-section {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .about-section p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .about-links { display: flex; gap: 1.5rem; }
+  .about-link {
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: opacity 0.2s;
+  }
+  .about-link:hover { opacity: 0.7; }
+
+  /* ── SECTION LABEL ── */
   .section-label {
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
+
+  /* ── BEHANCE PASSWORD HINT ── */
+  .pw-behance-hint { margin-bottom: 1.5rem; }
+  .pw-behance-btn {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .pw-behance-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
 
   /* ── PROJECT ITEMS ── */
   .project-list {
@@ -192,7 +307,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
 
   .project-title {
@@ -203,7 +318,7 @@
   }
 
   .project-tag {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--muted);
     border: 1px solid var(--border);
     padding: 0.15rem 0.5rem;
@@ -217,23 +332,29 @@
     color: var(--muted);
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 300;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.3rem;
     line-height: 1.5;
   }
 
-  /* spoiler link */
+  .project-meta {
+    font-size: 0.65rem;
+    color: #3e3e38;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── SPOILER LINK ── */
   .spoiler-wrap {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
   }
-
   .spoiler-label {
     font-size: 0.7rem;
     color: var(--muted);
     letter-spacing: 0.05em;
   }
-
   .spoiler-btn {
     display: inline-flex;
     align-items: center;
@@ -248,10 +369,8 @@
     color: var(--muted);
     letter-spacing: 0.05em;
     transition: border-color 0.2s, color 0.2s;
-    text-decoration: none;
   }
   .spoiler-btn:hover { border-color: var(--border-hover); color: var(--text); }
-
   .spoiler-hidden {
     display: inline-flex;
     align-items: center;
@@ -268,45 +387,8 @@
     transition: opacity 0.25s, max-width 0.3s;
     pointer-events: none;
   }
-  .spoiler-hidden.revealed {
-    opacity: 1;
-    max-width: 600px;
-    pointer-events: auto;
-  }
+  .spoiler-hidden.revealed { opacity: 1; max-width: 600px; pointer-events: auto; }
   .spoiler-hidden:hover { text-decoration: underline; }
-
-  /* ── PASSWORD HINT BUTTON ── */
-  .pw-hint-wrap {
-    margin-top: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .pw-hint-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .pw-hint-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
-  .pw-hint-text {
-    font-size: 0.85rem;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.3s, max-height 0.3s;
-    text-align: center;
-  }
-  .pw-hint-text.visible { opacity: 1; max-height: 2rem; }
 
   /* ── FOOTER ── */
   .port-footer {
@@ -324,36 +406,55 @@
     20% { transform: translateX(-6px); }
     60% { transform: translateX(6px); }
   }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .fade-in { animation: fadeIn 0.4s ease forwards; }
 </style>
 </head>
 <body>
 
 <!-- ════════════════════════════════
-     GATE SCREEN
+     STEP 1 — EMAIL GATE
 ════════════════════════════════ -->
-<section id="gate">
+<section id="email-gate" class="screen">
   <div class="gate-icon">🗝</div>
-  <div>
-    <div class="gate-title">Private Portfolio</div>
-  </div>
+  <div class="gate-title">Private Portfolio</div>
   <p class="gate-sub">
-    This page contains protected project links.<br>
-    Enter the access password to continue.
+    Leave your name and email to access<br>Asiye Özsoy's protected project links.
   </p>
+
   <div class="gate-form">
-    <div class="gate-input-wrap">
-      <input id="pw-input" type="password" placeholder="enter password" autocomplete="off" spellcheck="false" />
-      <button id="toggle-vis" type="button" title="show/hide">show</button>
+    <div>
+      <div class="field-label">Full Name</div>
+      <input id="input-name" class="gate-input" type="text" placeholder="Your name" autocomplete="name" />
     </div>
-    <button id="enter-btn" type="button">→ unlock</button>
-    <div class="error-msg" id="err-msg"></div>
+    <div>
+      <div class="field-label">Email Address</div>
+      <input id="input-email" class="gate-input" type="email" placeholder="your@email.com" autocomplete="email" />
+    </div>
+    <button class="gate-btn" id="email-btn" type="button">→ request access</button>
+    <div class="status-msg" id="email-status"></div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     STEP 2 — PASSWORD GATE
+════════════════════════════════ -->
+<section id="pw-gate" class="screen" style="display:none;">
+  <div class="gate-icon">🔒</div>
+  <div class="gate-title">One more step</div>
+  <p class="gate-sub">Enter the password you received.</p>
+
+  <div class="gate-form">
+    <div class="field-wrap">
+      <input id="pw-input" class="gate-input" type="password" placeholder="enter password" autocomplete="off" spellcheck="false" />
+      <button id="toggle-vis" type="button">show</button>
+    </div>
+    <button id="enter-btn" class="gate-btn" type="button">→ unlock</button>
+    <div class="status-msg error" id="pw-error"></div>
   </div>
 
   <div class="pw-hint-wrap">
@@ -362,7 +463,6 @@
     </button>
     <div class="pw-hint-text" id="pw-hint-text">dqd7LU44e3z</div>
   </div>
-
 </section>
 
 
@@ -371,14 +471,31 @@
 ════════════════════════════════ -->
 <main id="portfolio">
 
+  <!-- Floating available badge -->
+  <div class="badge-available">
+    <div class="badge-dot"></div>
+    currently available for freelance
+  </div>
+
   <div class="port-header">
     <div class="port-name">Asiye Özsoy</div>
-    <div class="port-desc">2D Animator · Slot Game Animation Projects · Spine2D / After Effects / VFX </div>
+    <div class="port-desc">2D Animator · Slot & Mobile · Game Assets Animations · Spine2D / After Effects / Photoshop</div>
+  </div>
+
+  <div class="about-section">
+    <p>I graduated from Istanbul Aydın University, Fine Arts — Cartoon & Animation. I've been working in animation for ~8–9 years, and in the game industry for 5–6 years. I develop UI, symbol, background, and character animations for slot and mobile games using Spine2D, After Effects, and Photoshop — always with a focus on optimization. I'm open to all kinds of slot and mobile game projects.</p>
+    <div class="about-links">
+      <a href="https://www.linkedin.com/in/asiyeozsoy/" target="_blank" rel="noopener" class="about-link">↗ LinkedIn</a>
+      <a href="mailto:asiyeaydinlinetwork@gmail.com" class="about-link">↗ Email</a>
+    </div>
   </div>
 
   <div class="section-label">Selected Work — Private Links</div>
-  <div style="font-size:0.7rem; color: var(--accent-dim); letter-spacing:0.05em; margin-bottom:1.5rem; font-family:'IBM Plex Sans',sans-serif;">
-    🔑 All Behance projects use the same password: <span style="color:var(--accent);">dqd7LU44e3z</span>
+  <div class="pw-behance-hint">
+    <button class="pw-behance-btn" onclick="this.style.display='none'; document.getElementById('behance-pw').classList.add('visible')">
+      🔑 psst... same key, all doors — click to peek
+    </button>
+    <div class="pw-hint-text" id="behance-pw">dqd7LU44e3z</div>
   </div>
 
   <div class="project-list">
@@ -389,7 +506,8 @@
         <div class="project-title">The Tipsy Tourist — Slot Game</div>
         <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc"> Slot game animations - animated by me </div>
+      <div class="project-desc">Slot game animations - animated by me</div>
+      <div class="project-meta">Spine2D rigging · symbol & character animations · win sequences · VFX</div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -405,7 +523,8 @@
         <div class="project-title">Heist Bank Rush — Slot Game</div>
         <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc"> Slot game animations - animated by me </div>
+      <div class="project-desc">Slot game animations - animated by me</div>
+      <div class="project-meta">Spine2D rigging · character & background animations · win sequences · VFX</div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -421,7 +540,8 @@
         <div class="project-title">Stampede Gold — Slot Game</div>
         <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc"> Slot game animations - animated by me </div>
+      <div class="project-desc">Slot game animations - animated by me</div>
+      <div class="project-meta">Spine2D rigging · animal rigs · symbol & UI animations · particle VFX</div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -437,7 +557,8 @@
         <div class="project-title">Gold Nugget Rush — Slot Game</div>
         <span class="project-tag">Spine2D · After Effects · VFX</span>
       </div>
-      <div class="project-desc"> Slot game animations - animated by me </div>
+      <div class="project-desc">Slot game animations - animated by me</div>
+      <div class="project-meta">Spine2D rigging · symbol & character animations · win sequences · VFX</div>
       <div class="spoiler-wrap">
         <span class="spoiler-label">link →</span>
         <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
@@ -453,7 +574,11 @@
 
   <div class="port-footer">
     <div>Available for freelance projects &amp; collaborations.</div>
-    <div>Contact: asiyeaydinlinetwork@gmail.com</div>
+    <div>
+      <a href="mailto:asiyeaydinlinetwork@gmail.com" style="color:var(--accent);text-decoration:none;">asiyeaydinlinetwork@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.linkedin.com/in/asiyeozsoy/" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">LinkedIn ↗</a>
+    </div>
     <div style="margin-top:1rem; color: #3a3a36;">
       This page is password protected and intended for professional contacts only.
     </div>
@@ -463,50 +588,127 @@
 
 
 <script>
-  /* ── PASSWORD CONFIG ── */
-  const PASSWORD = "dqd7LU44e3z";
+  /* ══════════════════════════════
+     CONFIG — sadece burası değişir
+  ══════════════════════════════ */
+  const PASSWORD       = "dqd7LU44e3z";
+  const FORMSPREE_URL  = "https://formspree.io/f/xaqaggpb";
 
-  /* ── GATE LOGIC ── */
-  const gate = document.getElementById('gate');
-  const portfolio = document.getElementById('portfolio');
-  const input = document.getElementById('pw-input');
-  const btn = document.getElementById('enter-btn');
-  const errMsg = document.getElementById('err-msg');
-  const toggleVis = document.getElementById('toggle-vis');
+  /* ══════════════════════════════
+     ELEMENTS
+  ══════════════════════════════ */
+  const emailGate  = document.getElementById('email-gate');
+  const pwGate     = document.getElementById('pw-gate');
+  const portfolio  = document.getElementById('portfolio');
+  const emailBtn   = document.getElementById('email-btn');
+  const emailStatus= document.getElementById('email-status');
+  const inputName  = document.getElementById('input-name');
+  const inputEmail = document.getElementById('input-email');
+  const pwInput    = document.getElementById('pw-input');
+  const enterBtn   = document.getElementById('enter-btn');
+  const pwError    = document.getElementById('pw-error');
+  const toggleVis  = document.getElementById('toggle-vis');
+
+  /* ══════════════════════════════
+     SESSION — already unlocked?
+  ══════════════════════════════ */
+  if (sessionStorage.getItem('pf_unlocked') === '1') {
+    showPortfolio();
+  }
+
+  /* ══════════════════════════════
+     STEP 1 — EMAIL GATE
+  ══════════════════════════════ */
+  emailBtn.addEventListener('click', submitEmail);
+  inputEmail.addEventListener('keydown', e => { if (e.key === 'Enter') submitEmail(); });
+
+  async function submitEmail() {
+    const name  = inputName.value.trim();
+    const email = inputEmail.value.trim();
+
+    if (!name) {
+      inputName.classList.add('error');
+      setTimeout(() => inputName.classList.remove('error'), 2000);
+      emailStatus.textContent = 'please enter your name.';
+      emailStatus.className = 'status-msg error';
+      return;
+    }
+    if (!email || !email.includes('@')) {
+      inputEmail.classList.add('error');
+      setTimeout(() => inputEmail.classList.remove('error'), 2000);
+      emailStatus.textContent = 'please enter a valid email.';
+      emailStatus.className = 'status-msg error';
+      return;
+    }
+
+    emailBtn.disabled = true;
+    emailStatus.textContent = 'sending...';
+    emailStatus.className = 'status-msg';
+
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+
+      if (res.ok) {
+        sessionStorage.setItem('pf_email_done', '1');
+        emailGate.style.display = 'none';
+        pwGate.style.display    = 'flex';
+      } else {
+        throw new Error('form error');
+      }
+    } catch {
+      /* formspree bağlı değilse direkt geç — test modunda çalışır */
+      emailGate.style.display = 'none';
+      pwGate.style.display    = 'flex';
+    } finally {
+      emailBtn.disabled = false;
+    }
+  }
+
+  /* ══════════════════════════════
+     STEP 2 — PASSWORD GATE
+  ══════════════════════════════ */
+  enterBtn.addEventListener('click', unlock);
+  pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
 
   function unlock() {
-    if (input.value === PASSWORD) {
-      gate.style.display = 'none';
-      portfolio.style.display = 'block';
-      portfolio.classList.add('fade-in');
+    if (pwInput.value === PASSWORD) {
+      pwGate.style.display = 'none';
+      showPortfolio();
       sessionStorage.setItem('pf_unlocked', '1');
     } else {
-      errMsg.textContent = 'incorrect password.';
-      input.classList.add('error');
-      input.value = '';
+      pwError.textContent = 'incorrect password.';
+      pwInput.classList.add('error');
+      pwInput.value = '';
       setTimeout(() => {
-        input.classList.remove('error');
-        errMsg.textContent = '';
+        pwInput.classList.remove('error');
+        pwError.textContent = '';
       }, 2000);
     }
   }
 
-  btn.addEventListener('click', unlock);
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlock(); });
-
   toggleVis.addEventListener('click', () => {
-    const isHidden = input.type === 'password';
-    input.type = isHidden ? 'text' : 'password';
-    toggleVis.textContent = isHidden ? 'hide' : 'show';
+    const hidden = pwInput.type === 'password';
+    pwInput.type = hidden ? 'text' : 'password';
+    toggleVis.textContent = hidden ? 'hide' : 'show';
   });
 
-  /* session persistence: stay unlocked on page refresh */
-  if (sessionStorage.getItem('pf_unlocked') === '1') {
-    gate.style.display = 'none';
-    portfolio.style.display = 'block';
+  /* ══════════════════════════════
+     SHOW PORTFOLIO
+  ══════════════════════════════ */
+  function showPortfolio() {
+    emailGate.style.display  = 'none';
+    pwGate.style.display     = 'none';
+    portfolio.style.display  = 'block';
+    portfolio.classList.add('fade-in');
   }
 
-  /* ── SPOILER REVEAL ── */
+  /* ══════════════════════════════
+     SPOILER REVEAL
+  ══════════════════════════════ */
   function revealLink(btn) {
     const link = btn.nextElementSibling;
     btn.style.display = 'none';
