@@ -362,7 +362,7 @@
     gap: 0.4rem;
     background: var(--reveal-bg);
     border: 1px solid var(--border);
-    border-radius: 2px; 
+    border-radius: 2px;
     padding: 0.3rem 0.7rem;
     cursor: pointer;
     font-family: 'IBM Plex Mono', monospace;
@@ -417,32 +417,7 @@
 <body>
 
 <!-- ════════════════════════════════
-     STEP 1 — EMAIL GATE
-════════════════════════════════ -->
-<section id="email-gate" class="screen">
-  <div class="gate-icon">🗝</div>
-  <div class="gate-title">Private Portfolio</div>
-  <p class="gate-sub">
-    Leave your name and email to access<br>Asiye Özsoy's protected project links.
-  </p>
-
-  <div class="gate-form">
-    <div>
-      <div class="field-label">Full Name</div>
-      <input id="input-name" class="gate-input" type="text" placeholder="Your name" autocomplete="name" />
-    </div>
-    <div>
-      <div class="field-label">Email Address</div>
-      <input id="input-email" class="gate-input" type="email" placeholder="your@email.com" autocomplete="email" />
-    </div>
-    <button class="gate-btn" id="email-btn" type="button">→ request access</button>
-    <div class="status-msg" id="email-status"></div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════
-     STEP 2 — PASSWORD GATE
+     PASSWORD GATE
 ════════════════════════════════ -->
 <section id="pw-gate" class="screen" style="display:none;">
   <div class="gate-icon">🔒</div>
@@ -592,86 +567,18 @@
   /* ══════════════════════════════
      CONFIG — sadece burası değişir
   ══════════════════════════════ */
-  const PASSWORD       = "dqd7LU44e3z";
-  const FORMSPREE_URL  = "https://formspree.io/f/xaqaggpb";
+  const PASSWORD = "dqd7LU44e3z";
 
-  /* ══════════════════════════════
-     ELEMENTS
-  ══════════════════════════════ */
-  const emailGate  = document.getElementById('email-gate');
-  const pwGate     = document.getElementById('pw-gate');
-  const portfolio  = document.getElementById('portfolio');
-  const emailBtn   = document.getElementById('email-btn');
-  const emailStatus= document.getElementById('email-status');
-  const inputName  = document.getElementById('input-name');
-  const inputEmail = document.getElementById('input-email');
-  const pwInput    = document.getElementById('pw-input');
-  const enterBtn   = document.getElementById('enter-btn');
-  const pwError    = document.getElementById('pw-error');
-  const toggleVis  = document.getElementById('toggle-vis');
+  const pwGate    = document.getElementById('pw-gate');
+  const portfolio = document.getElementById('portfolio');
+  const pwInput   = document.getElementById('pw-input');
+  const enterBtn  = document.getElementById('enter-btn');
+  const pwError   = document.getElementById('pw-error');
+  const toggleVis = document.getElementById('toggle-vis');
 
-  /* ══════════════════════════════
-     SESSION — already unlocked?
-  ══════════════════════════════ */
   if (sessionStorage.getItem('pf_unlocked') === '1') {
     showPortfolio();
   }
-
-  /* ══════════════════════════════
-     STEP 1 — EMAIL GATE
-  ══════════════════════════════ */
-  emailBtn.addEventListener('click', submitEmail);
-  inputEmail.addEventListener('keydown', e => { if (e.key === 'Enter') submitEmail(); });
-
-  async function submitEmail() {
-    const name  = inputName.value.trim();
-    const email = inputEmail.value.trim();
-
-    if (!name) {
-      inputName.classList.add('error');
-      setTimeout(() => inputName.classList.remove('error'), 2000);
-      emailStatus.textContent = 'please enter your name.';
-      emailStatus.className = 'status-msg error';
-      return;
-    }
-    if (!email || !email.includes('@')) {
-      inputEmail.classList.add('error');
-      setTimeout(() => inputEmail.classList.remove('error'), 2000);
-      emailStatus.textContent = 'please enter a valid email.';
-      emailStatus.className = 'status-msg error';
-      return;
-    }
-
-    emailBtn.disabled = true;
-    emailStatus.textContent = 'sending...';
-    emailStatus.className = 'status-msg';
-
-    try {
-      const res = await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ name, email })
-      });
-
-      if (res.ok) {
-        sessionStorage.setItem('pf_email_done', '1');
-        emailGate.style.display = 'none';
-        pwGate.style.display    = 'flex';
-      } else {
-        throw new Error('form error');
-      }
-    } catch {
-      /* formspree bağlı değilse direkt geç — test modunda çalışır */
-      emailGate.style.display = 'none';
-      pwGate.style.display    = 'flex';
-    } finally {
-      emailBtn.disabled = false;
-    }
-  }
-
-  /* ══════════════════════════════
-     STEP 2 — PASSWORD GATE
-  ══════════════════════════════ */
   enterBtn.addEventListener('click', unlock);
   pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
 
@@ -701,9 +608,8 @@
      SHOW PORTFOLIO
   ══════════════════════════════ */
   function showPortfolio() {
-    emailGate.style.display  = 'none';
-    pwGate.style.display     = 'none';
-    portfolio.style.display  = 'block';
+    pwGate.style.display    = 'none';
+    portfolio.style.display = 'block';
     portfolio.classList.add('fade-in');
   }
 
