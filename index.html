@@ -1,1421 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Portfolio — Asiye Özsoy</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🙂</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #0d0a14;
-    --surface: #160f22;
-    --border: #2e2340;
-    --border-hover: #5a4478;
-    --text: #e8e2f0;
-    --muted: #7a6e8a;
-    --accent: #c8a8f0;
-    --accent-dim: #6b4898;
-    --reveal-bg: #1c1428;
-    --danger: #c87a9a;
-    --green: #7ac8a8;
-  }
-
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    background-image: radial-gradient(circle, #2e2340 1px, transparent 1px);
-    background-size: 28px 28px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon points='0,0 0,12 3,9 5,14 7,13 5,8 9,8' fill='%23c8a8f0' stroke='%230d0a14' stroke-width='1'/%3E%3C/svg%3E") 0 0, auto;
-  }
-
-  /* ════════════════════════
-     SHARED GATE STYLES
-  ════════════════════════ */
-  .screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    gap: 1.75rem;
-  }
-
-  .gate-icon { font-size: 2rem; opacity: 0.6; }
-
-  .gate-title {
-    font-size: clamp(1rem, 3vw, 1.25rem);
-    font-weight: 300;
-    color: var(--text);
-    letter-spacing: 0.15em;
-    text-align: center;
-  }
-
-  .gate-sub {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-align: center;
-    max-width: 360px;
-    line-height: 1.7;
-  }
-
-  .gate-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    width: 100%;
-    max-width: 320px;
-  }
-
-  .field-label {
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.3rem;
-  }
-
-  .field-wrap { position: relative; }
-
-  .gate-input {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem;
-    padding: 0.7rem 1rem;
-    letter-spacing: 0.05em;
-    outline: none;
-    border-radius: 2px;
-    transition: border-color 0.2s;
-  }
-  .gate-input::placeholder { color: var(--muted); font-size: 0.8rem; }
-  .gate-input:focus { border-color: var(--accent-dim); }
-  .gate-input.error { border-color: var(--danger); animation: shake 0.3s ease; }
-
-  #toggle-vis {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 0.75rem;
-    font-family: 'IBM Plex Mono', monospace;
-    padding: 0;
-    transition: color 0.2s;
-  }
-  #toggle-vis:hover { color: var(--text); }
-
-  .gate-btn {
-    width: 100%;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--accent);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 0.7rem 1rem;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: border-color 0.2s, background 0.2s;
-    margin-top: 0.25rem;
-  }
-  .gate-btn:hover { border-color: var(--accent-dim); background: rgba(200,184,122,0.05); }
-  .gate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .status-msg {
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    min-height: 1rem;
-    text-align: center;
-  }
-  .status-msg.error { color: var(--danger); }
-  .status-msg.success { color: var(--green); }
-
-  /* hint button */
-  .pw-hint-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .pw-hint-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    padding: 0.45rem 1rem;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .pw-hint-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
-  .pw-hint-text {
-    font-size: 0.85rem;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.3s, max-height 0.3s;
-    text-align: center;
-  }
-  .pw-hint-text.visible { opacity: 1; max-height: 2rem; }
-
-  /* ════════════════════════
-     PORTFOLIO SCREEN
-  ════════════════════════ */
-  #portfolio {
-    display: none;
-    min-height: 100vh;
-    padding: 3rem 1.5rem 5rem;
-    max-width: 680px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  /* ── AVAILABLE BADGE ── */
-  .badge-available {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.65rem;
-    color: var(--green);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    z-index: 100;
-    cursor: default;
-  }
-  .badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    animation: pulse 2s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .badge-wave {
-    font-size: 0.9rem;
-    display: inline-block;
-    animation: wave 1.8s ease-in-out infinite;
-    transform-origin: 70% 70%;
-  }
-  @keyframes wave {
-    0%,100% { transform: rotate(0deg); }
-    15% { transform: rotate(14deg); }
-    30% { transform: rotate(-8deg); }
-    45% { transform: rotate(14deg); }
-    60% { transform: rotate(-4deg); }
-    75% { transform: rotate(10deg); }
-  }
-
-  .badge-bubble {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    right: 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.35rem 0.65rem;
-    font-size: 0.65rem;
-    color: var(--text);
-    white-space: nowrap;
-    letter-spacing: 0.05em;
-    text-transform: none;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s, transform 0.2s;
-    pointer-events: none;
-  }
-  .badge-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 1rem;
-    border: 5px solid transparent;
-    border-top-color: var(--border);
-  }
-  .badge-available:hover .badge-bubble {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── HEADER ── */
-  .port-header {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .port-name {
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    font-weight: 400;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    margin-bottom: 0.35rem;
-  }
-
-  .port-desc {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.04em;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 300;
-  }
-
-  /* ── ABOUT ── */
-  .about-section {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  .about-section p {
-    font-size: 0.78rem;
-    color: var(--muted);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-    margin-bottom: 1rem;
-  }
-  .about-links { display: flex; gap: 1.5rem; }
-  .about-link {
-    font-size: 0.72rem;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: opacity 0.2s;
-  }
-  .about-link:hover { opacity: 0.7; }
-
-  /* ── SECTION LABEL ── */
-  .section-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.75rem;
-  }
-
-  /* ── BEHANCE PASSWORD HINT ── */
-  .pw-behance-hint { margin-bottom: 1.5rem; }
-  .pw-behance-btn {
-    background: transparent;
-    border: 1px dashed var(--border);
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .pw-behance-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
-
-  /* ── PROJECT ITEMS ── */
-  .project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 3rem;
-  }
-
-  .project-item {
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
-  }
-
-  .project-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .project-title {
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--text);
-    letter-spacing: 0.05em;
-  }
-
-  .project-tag {
-    font-size: 0.62rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 0.15rem 0.5rem;
-    border-radius: 2px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .project-desc {
-    font-size: 0.72rem;
-    color: var(--muted);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 300;
-    margin-bottom: 0.3rem;
-    line-height: 1.5;
-  }
-
-  .project-meta {
-    font-size: 0.65rem;
-    color: #3e3e38;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.6rem;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  /* ── SPOILER LINK ── */
-  .spoiler-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .spoiler-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
-  .spoiler-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: var(--reveal-bg);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .spoiler-btn:hover { border-color: var(--border-hover); color: var(--text); }
-  .spoiler-hidden {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.72rem;
-    color: var(--accent);
-    letter-spacing: 0.03em;
-    word-break: break-all;
-    cursor: pointer;
-    text-decoration: none;
-    opacity: 0;
-    max-width: 0;
-    overflow: hidden;
-    transition: opacity 0.25s, max-width 0.3s;
-    pointer-events: none;
-  }
-  .spoiler-hidden.revealed { opacity: 1; max-width: 600px; pointer-events: auto; }
-  .spoiler-hidden:hover { text-decoration: underline; }
-
-  /* ── PORTFOLIO BACKGROUND ── */
-  #portfolio-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.07;
-    display: none;
-  }
-
-  #portfolio {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ── FLOATING EMOJIS ── */
-  .port-name-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .emoji-float {
-    display: inline-block;
-    font-size: 1rem;
-    animation: floaty 3s ease-in-out infinite;
-  }
-  .emoji-float:nth-child(2) { animation-delay: 0.5s; }
-  .emoji-float:nth-child(3) { animation-delay: 1s; }
-
-  @keyframes floaty {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-  }
-
-  /* ── SCANLINE OVERLAY ── */
-  #portfolio::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── FOOTER ── */
-  .port-footer {
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    line-height: 2;
-    border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
-  }
-
-  /* ── GLITCH CANVAS ── */
-  #glitch-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.18;
-  }
-
-  #pw-gate {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* glitch title */
-  .glitch {
-    position: relative;
-    display: inline-block;
-  }
-  .glitch::before,
-  .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-  }
-  .glitch::before {
-    color: #c87a7a;
-    animation: glitch-1 3s infinite;
-    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-  }
-  .glitch::after {
-    color: #7ac8c8;
-    animation: glitch-2 3s infinite;
-    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-  }
-  @keyframes glitch-1 {
-    0%,90%,100% { transform: translate(0); opacity: 0; }
-    92% { transform: translate(-3px, 1px); opacity: 1; }
-    94% { transform: translate(3px, -1px); opacity: 1; }
-    96% { transform: translate(-2px, 0); opacity: 1; }
-    98% { transform: translate(0); opacity: 0; }
-  }
-  @keyframes glitch-2 {
-    0%,90%,100% { transform: translate(0); opacity: 0; }
-    93% { transform: translate(3px, 2px); opacity: 1; }
-    95% { transform: translate(-3px, -1px); opacity: 1; }
-    97% { transform: translate(2px, 0); opacity: 1; }
-    99% { transform: translate(0); opacity: 0; }
-  }
-
-  /* ── GALAXY CANVAS ── */
-  #galaxy-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* ── CURSOR TRAIL ── */
-  .cursor-spark {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    border-radius: 50%;
-    animation: spark-fade 0.6s ease forwards;
-  }
-  @keyframes spark-fade {
-    0% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0); }
-  }
-
-  /* ── PROJECT CARD HOVER ── */
-  .project-item {
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
-    transition: transform 0.2s, padding-left 0.2s;
-    cursor: default;
-  }
-  .project-item:hover {
-    transform: translateX(4px);
-    padding-left: 0.5rem;
-    border-bottom-color: var(--accent-dim);
-  }
-
-  /* ── COPY EMAIL ── */
-  .copy-email {
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem;
-    cursor: pointer;
-    letter-spacing: 0.08em;
-    padding: 0;
-    text-decoration: none;
-    position: relative;
-  }
-  .copy-email:hover { opacity: 0.7; }
-  .copy-toast {
-    position: fixed;
-    bottom: 5rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: var(--surface);
-    border: 1px solid var(--accent-dim);
-    color: var(--accent);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    padding: 0.4rem 1rem;
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.2s, transform 0.2s;
-    pointer-events: none;
-    z-index: 200;
-  }
-  .copy-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* ── SCROLL PROGRESS BAR ── */
-  #scroll-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
-    z-index: 999;
-    transition: width 0.1s;
-    display: none;
-  }
-
-  /* ── STAT LINE ── */
-  .port-stats {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 0.6rem;
-    flex-wrap: wrap;
-  }
-  .stat-item {
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-  }
-  .stat-item span {
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  /* ── LANG SWITCHER ── */
-  .lang-switcher {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    display: none;
-    gap: 0.3rem;
-    z-index: 200;
-    align-items: center;
-  }
-  .lang-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-  .lang-btn.active { border-color: var(--accent-dim); color: var(--accent); }
-  .lang-btn:hover { border-color: var(--accent-dim); color: var(--accent); }
-
-  /* ── NEW BADGE ── */
-  .new-badge {
-    font-size: 0.55rem;
-    background: var(--accent);
-    color: #0d0a14;
-    letter-spacing: 0.15em;
-    padding: 0.1rem 0.4rem;
-    border-radius: 2px;
-    font-weight: 500;
-    vertical-align: middle;
-    margin-left: 0.4rem;
-    animation: newPulse 2s ease-in-out infinite;
-  }
-  @keyframes newPulse {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
-
-  /* ── HOW I WORK ── */
-  .how-section {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  .how-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.75rem;
-  }
-  .how-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .how-item {
-    font-size: 0.72rem;
-    color: var(--muted);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 300;
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-  }
-  .how-item::before {
-    content: '▸';
-    color: var(--accent);
-    flex-shrink: 0;
-    font-size: 0.65rem;
-    margin-top: 0.1rem;
-  }
-
-  /* ── UNLOCK FLASH ── */
-  @keyframes unlockFlash {
-    0% { opacity: 0; }
-    30% { opacity: 0.15; }
-    100% { opacity: 0; }
-  }
-  .unlock-flash {
-    position: fixed;
-    inset: 0;
-    background: var(--accent);
-    z-index: 500;
-    pointer-events: none;
-    animation: unlockFlash 0.6s ease forwards;  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    60% { transform: translateX(6px); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .nda-notice {
-    max-width: 340px;
-    text-align: center;
-    font-size: 0.62rem;
-    color: #4a3a5a;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-    letter-spacing: 0.03em;
-    border-top: 1px solid #2e2340;
-    padding-top: 1.2rem;
-    margin-top: 0.5rem;
-  }
-  .nda-notice strong {
-    color: #6a5a7a;
-    font-weight: 400;
-  }
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asiye Özsoy — 2D Animator + VFX</title>
+  <meta name="description" content="2D animator and VFX artist. Games, motion, and lyric work. Open to freelance. Skopje / Istanbul.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
+  <header class="site-header">
+    <a class="wordmark" href="index.html">AO</a>
+    <nav class="nav">
+      <a href="#work" aria-current="page">Work</a>
+      <a href="about.html">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-<!-- ════════════════════════════════
-     PASSWORD GATE
-════════════════════════════════ -->
-<div id="scroll-bar"></div>
-<div class="lang-switcher" id="lang-switcher">
-  <button class="lang-btn active" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('tr')">TR</button>
-</div>
-<canvas id="galaxy-canvas"></canvas>
-<canvas id="glitch-canvas"></canvas>
-<section id="pw-gate" class="screen">
-  <div class="gate-icon">🔒</div>
-  <div class="gate-title glitch" data-text="Private Portfolio">Private Portfolio</div>
-  <p class="gate-sub">Enter the password to continue.</p>
+  <main>
+    <section id="work" class="section">
+      <p class="kicker">Work</p>
 
-  <div class="gate-form">
-    <div class="field-wrap">
-      <input id="pw-input" class="gate-input" type="password" placeholder="enter password" autocomplete="off" spellcheck="false" />
-      <button id="toggle-vis" type="button">show</button>
-    </div>
-    <button id="enter-btn" class="gate-btn" type="button">→ unlock</button>
-    <div class="status-msg error" id="pw-error"></div>
-  </div>
-
-  <div class="pw-hint-wrap">
-    <button class="pw-hint-btn" id="hint-btn" onclick="hintClick()">
-      psst... need a hint? 🤫
-    </button>
-    <div class="pw-hint-text" id="pw-hint-text">dqd7LU44e3z</div>
-  </div>
-
-  <div class="nda-notice">
-    This portfolio is password-protected due to active <strong>Non-Disclosure Agreements (NDAs)</strong>.<br><br>
-    Content features only the <strong>final, publicly released</strong> versions of projects — specifically the animations and VFX assets created by me.<br><br>
-    No confidential workflows, source files, or unreleased drafts are disclosed.<br><br>
-    Please refer to my CV or <strong>contact me via DM</strong> for the access key.
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════
-     PORTFOLIO SCREEN
-════════════════════════════════ -->
-<canvas id="portfolio-canvas"></canvas>
-<main id="portfolio">
-
-  <!-- Floating available badge -->
-  <div class="badge-available">
-    <div class="badge-bubble">hey! i'm right here 👀</div>
-    <div class="badge-dot"></div>
-    currently available for freelance
-    <span class="badge-wave">👋</span>
-  </div>
-
-  <div class="port-header">
-    <div class="port-name-wrap">
-      <div class="port-name">Asiye Özsoy</div>
-      <span class="emoji-float">🪭</span>
-      <span class="emoji-float">✨</span>
-      <span class="emoji-float">✍️</span>
-    </div>
-    <div class="port-desc">2D Animator · Slot & Mobile · Game Assets Animations · Spine2D / After Effects / Photoshop</div>
-    <div class="port-stats">
-      <div class="stat-item">experience <span>~8–9 yrs</span></div>
-      <div class="stat-item">game industry <span>5–6 yrs</span></div>
-      <div class="stat-item">projects <span>4 shown (wip)</span></div>
-      <div class="stat-item">tools <span>Spine2D · AE · PS</span></div>
-    </div>
-  </div>
-
-  <div class="about-section">
-    <p class="lang-en">I graduated from Istanbul Aydın University, Fine Arts — Cartoon & Animation. I've been working in animation for ~8–9 years, and in the game industry for 5–6 years. I develop UI, symbol, background, and character animations for slot and mobile games using Spine2D, After Effects, and Photoshop — always with a focus on optimization. I'm open to all kinds of slot and mobile game projects.</p>
-    <p class="lang-tr" style="display:none;">İstanbul Aydın Üniversitesi Güzel Sanatlar, Çizgi film & Animasyon mezunuyum. ~8–9 yıldır animasyon, 5–6 yıldır oyun sektöründeyim. Slot ve mobil oyunlar için UI, symbol, background ve character animasyonlarını Spine2D, After Effects ve Photoshop kullanarak geliştiriyorum — daima optimizasyona dikkat ederek ilerliyorum. Her türlü slot ve mobil oyun projesine açığım.</p>
-    <div class="about-links">
-      <a href="https://www.linkedin.com/in/asiyeozsoy/" target="_blank" rel="noopener" class="about-link">↗ LinkedIn</a>
-      <a href="mailto:asiyeaydinlinetwork@gmail.com" class="about-link">↗ Email</a>
-      <a href="https://giphy.com/asiyeaydinli" target="_blank" rel="noopener" class="about-link">↗ Giphy</a>
-    </div>
-  </div>
-
-  <div class="how-section">
-    <div class="how-label">How I work</div>
-    <div class="how-list">
-      <div class="how-item lang-en">Files delivered optimized for engine — Spine skeletons + AE exports, always clean and ready to implement.</div>
-      <div class="how-item lang-en">UI, symbol, background and character animations — full pipeline from rig to final export.</div>
-      <div class="how-item lang-en">Available for revisions throughout the project. Communication is fast and clear.</div>
-      <div class="how-item lang-tr" style="display:none;">Dosyalar motora hazır şekilde teslim edilir — Spine skeleton + AE export, her zaman temiz ve implement'a hazır.</div>
-      <div class="how-item lang-tr" style="display:none;">UI, symbol, background ve character animasyonları — rig'den final export'a tam pipeline.</div>
-      <div class="how-item lang-tr" style="display:none;">Proje boyunca revizyon için müsaitim. İletişim hızlı ve net.</div>
-    </div>
-  </div>
-
-  <div class="section-label">Selected Work — Private Links</div>
-  <div class="pw-behance-hint">
-    <button class="pw-behance-btn" id="behance-hint-btn" onclick="behanceHintClick()">
-      🔑 psst... same key, all doors — click to peek
-    </button>
-    <div class="pw-hint-text" id="behance-pw">dqd7LU44e3z</div>
-  </div>
-
-  <div class="project-list">
-
-    <!-- ── PROJECT 1 ── -->
-    <div class="project-item">
-      <div class="project-top">
-        <div class="project-title">The Tipsy Tourist — Slot Game</div>
-        <span class="project-tag">Spine2D · After Effects · VFX</span>
+      <div class="block">
+        <h2 class="section-title">Games</h2>
+        <div class="games-track-wrap">
+          <div class="games-track" tabindex="0" aria-label="Games">
+            <a class="tile" href="https://www.behance.net/gallery/241065881/Free-Of-The-Land" target="_blank" rel="noopener">
+              <img src="thumbs/free-of-the-land.jpg" alt="Free of the Land">
+              <span class="tile-label">Free of the Land</span>
+            </a>
+            <a class="tile" href="https://www.behance.net/gallery/220817751/Away-(GGJ-2025)" target="_blank" rel="noopener">
+              <img src="thumbs/away-ggj-2025.jpg" alt="Away (GGJ 2025)">
+              <span class="tile-label">Away</span>
+            </a>
+            <a class="tile" href="https://www.behance.net/gallery/174808199/Monkey-Mike-Animations" target="_blank" rel="noopener">
+              <img src="thumbs/monkey-mike.jpg" alt="Monkey Mike">
+              <span class="tile-label">Monkey Mike</span>
+            </a>
+            <a class="tile" href="https://www.behance.net/gallery/171261903/Scarlett-Journey-MF-Animations" target="_blank" rel="noopener">
+              <img src="thumbs/scarlett-journey-mf.jpg" alt="Scarlett Journey">
+              <span class="tile-label">Scarlett Journey</span>
+            </a>
+            <div class="tile nda" aria-disabled="true">
+              <img src="thumbs/the-tipsy-tourist.jpg" alt="">
+              <span class="tile-label">The Tipsy Tourist</span>
+            </div>
+            <div class="tile nda" aria-disabled="true">
+              <img src="thumbs/heist-bank-rush.jpg" alt="">
+              <span class="tile-label">Heist Bank Rush</span>
+            </div>
+            <div class="tile nda" aria-disabled="true">
+              <img src="thumbs/stampede-gold.jpg" alt="">
+              <span class="tile-label">Stampede Gold</span>
+            </div>
+            <div class="tile nda" aria-disabled="true">
+              <img src="thumbs/gold-nugget-rush.jpg" alt="">
+              <span class="tile-label">Gold Nugget Rush</span>
+            </div>
+          </div>
+        </div>
+        <p class="nda-note">Full slot reels: email for the password.</p>
       </div>
-      <div class="project-desc">Slot game animations - animated by me</div>
-      <div class="project-meta">Spine2D rigging · symbol & character animations · win sequences · VFX</div>
-      <div class="spoiler-wrap">
-        <span class="spoiler-label">link →</span>
-        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
-        <a class="spoiler-hidden" href="https://www.behance.net/gallery/174807313/The-Tipsy-Tourist-slot-game" target="_blank" rel="noopener">
-          behance.net · The Tipsy Tourist ↗
-        </a>
+
+      <div class="block">
+        <h2 class="section-title">Motion</h2>
+        <div class="grid">
+          <a class="tile" href="https://www.behance.net/gallery/129097191/Mercedes-Benz-F1-Instagram-GP" target="_blank" rel="noopener">
+            <img src="thumbs/mercedes-benz-f1-instagram-gp.jpg" alt="Mercedes-Benz F1 Instagram GP">
+            <span class="tile-label">Mercedes-Benz F1 Instagram GP</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/122119927/Volkswagen-Fathers-Day" target="_blank" rel="noopener">
+            <img src="thumbs/volkswagen-fathers-day.jpg" alt="Volkswagen Father's Day">
+            <span class="tile-label">Volkswagen Father's Day</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/128659975/Cube-Incubation" target="_blank" rel="noopener">
+            <img src="thumbs/cube-incubation.jpg" alt="Cube Incubation">
+            <span class="tile-label">Cube Incubation</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/135617525/Nissan-Mobile-App" target="_blank" rel="noopener">
+            <img src="thumbs/nissan-mobile-app.jpg" alt="Nissan Mobile App">
+            <span class="tile-label">Nissan Mobile App</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/140150429/Kzlay-Plus-Karamuerverli-Yesil" target="_blank" rel="noopener">
+            <img src="thumbs/kizilay-plus-karamurverli-soda.jpg" alt="Kızılay Plus">
+            <span class="tile-label">Kızılay Plus</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/135873563/Togg-CES-2022" target="_blank" rel="noopener">
+            <img src="thumbs/togg-ces-2022.jpg" alt="Togg CES 2022">
+            <span class="tile-label">Togg CES 2022</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <!-- ── PROJECT 2 ── -->
-    <div class="project-item">
-      <div class="project-top">
-        <div class="project-title">Heist Bank Rush — Slot Game</div>
-        <span class="project-tag">Spine2D · After Effects · VFX</span>
+      <div class="block">
+        <h2 class="section-title">Lyric</h2>
+        <div class="grid">
+          <a class="tile" href="https://www.behance.net/gallery/91504417/Altn-Guen-Vay-Vay" target="_blank" rel="noopener">
+            <img src="thumbs/altin-gun-vay-vay.jpg" alt="Altın Gün — Vay Vay">
+            <span class="tile-label">Altın Gün — Vay Vay</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86034231/Sertab-Erener-Karbeyaz-(Lyrics)" target="_blank" rel="noopener">
+            <img src="thumbs/sertab-erener-karbeyaz.jpg" alt="Sertab Erener — Karbeyaz">
+            <span class="tile-label">Sertab Erener — Karbeyaz</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86029261/Sezen-Aksu-Kalbim-Egede-Kald-(Lyrics)" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-kalbim-egede-kaldi.jpg" alt="Sezen Aksu — Kalbim Ege'de Kaldı">
+            <span class="tile-label">Sezen Aksu — Kalbim Ege'de Kaldı</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86030645/Sezen-Aksu-Kutlama-(Lyric)" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-kutlama.jpg" alt="Sezen Aksu — Kutlama">
+            <span class="tile-label">Sezen Aksu — Kutlama</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/85668925/Sezen-Aksu-Ruezgar-Krd-Dalm" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-ruzgar-kirdi-dalimi.jpg" alt="Sezen Aksu — Rüzgar Kırdı Dalımı">
+            <span class="tile-label">Sezen Aksu — Rüzgar Kırdı Dalımı</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86033073/Ferhat-Goecer-cimdeki-Hazine-(Lyrics)" target="_blank" rel="noopener">
+            <img src="thumbs/ferhat-gocer-icimdeki-hazine.jpg" alt="Ferhat Göçer — İçimdeki Hazine">
+            <span class="tile-label">Ferhat Göçer — İçimdeki Hazine</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86032571/Halil-Sezai-Sonbahar" target="_blank" rel="noopener">
+            <img src="thumbs/halil-sezai-sonbahar.jpg" alt="Halil Sezai — Sonbahar">
+            <span class="tile-label">Halil Sezai — Sonbahar</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/86033521/Sezen-Aksu-Ahbap-Cavuslar" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-ahbap-cavuslar.jpg" alt="Sezen Aksu — Ahbap Çavuşlar">
+            <span class="tile-label">Sezen Aksu — Ahbap Çavuşlar</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/85667417/Sezen-Aksu-Begonvil" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-begonvil.jpg" alt="Sezen Aksu — Begonvil">
+            <span class="tile-label">Sezen Aksu — Begonvil</span>
+          </a>
+          <a class="tile" href="https://www.behance.net/gallery/85669883/Sezen-Aksu-Anlasana" target="_blank" rel="noopener">
+            <img src="thumbs/sezen-aksu-anlasana.jpg" alt="Sezen Aksu — Anlasana">
+            <span class="tile-label">Sezen Aksu — Anlasana</span>
+          </a>
+        </div>
       </div>
-      <div class="project-desc">Slot game animations - animated by me</div>
-      <div class="project-meta">Spine2D rigging · character & background animations · win sequences · VFX</div>
-      <div class="spoiler-wrap">
-        <span class="spoiler-label">link →</span>
-        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
-        <a class="spoiler-hidden" href="https://www.behance.net/gallery/212545555/HEIST-BANK-RUSH-slot-game" target="_blank" rel="noopener">
-          behance.net · Heist Bank Rush ↗
-        </a>
-      </div>
-    </div>
+    </section>
 
-    <!-- ── PROJECT 3 ── -->
-    <div class="project-item">
-      <div class="project-top">
-        <div class="project-title">Stampede Gold — Slot Game</div>
-        <span class="project-tag">Spine2D · After Effects · VFX</span>
-      </div>
-      <div class="project-desc">Slot game animations - animated by me</div>
-      <div class="project-meta">Spine2D rigging · animal rigs · symbol & UI animations · particle VFX</div>
-      <div class="spoiler-wrap">
-        <span class="spoiler-label">link →</span>
-        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
-        <a class="spoiler-hidden" href="https://www.behance.net/gallery/212461917/STAMPEDE-GOLD-slot-game" target="_blank" rel="noopener">
-          behance.net · Stampede Gold ↗
-        </a>
-      </div>
-    </div>
+    <section id="contact" class="section contact">
+      <p class="kicker">Contact</p>
+      <h2 class="contact-title">Open to freelance</h2>
+      <button type="button" class="email-copy" data-copy-email>asiyeap2d@gmail.com</button>
+      <p class="contact-links">
+        <a href="https://www.linkedin.com/in/asiyeozsoy/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.behance.net/asiyeozsoy" target="_blank" rel="noopener">Behance</a>
+        <a href="https://www.instagram.com/asiye2d/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://giphy.com/asiyeaydinli" target="_blank" rel="noopener">Giphy</a>
+      </p>
+      <p class="muted">Skopje / Istanbul</p>
+    </section>
+  </main>
 
-    <!-- ── PROJECT 4 ── -->
-    <div class="project-item">
-      <div class="project-top">
-        <div class="project-title">Gold Nugget Rush — Slot Game <span class="new-badge">NEW</span></div>
-        <span class="project-tag">Spine2D · After Effects · VFX</span>
-      </div>
-      <div class="project-desc">Slot game animations - animated by me</div>
-      <div class="project-meta">Spine2D rigging · symbol & character animations · win sequences · VFX</div>
-      <div class="spoiler-wrap">
-        <span class="spoiler-label">link →</span>
-        <button class="spoiler-btn" onclick="revealLink(this)">🔒 click to reveal</button>
-        <a class="spoiler-hidden" href="https://www.behance.net/gallery/248279533/Gold-Nugget-Rush-slot-game" target="_blank" rel="noopener">
-          behance.net · Gold Nugget Rush ↗
-        </a>
-      </div>
-    </div>
-
-    <!-- ── ADD MORE PROJECTS BELOW THIS LINE ── -->
-
-  </div>
-
-  <div class="port-footer">
-    <div>Available for freelance projects &amp; collaborations.</div>
-    <div>
-      <button class="copy-email" onclick="copyEmail()">asiyeaydinlinetwork@gmail.com</button>
-      &nbsp;·&nbsp;
-      <a href="https://www.linkedin.com/in/asiyeozsoy/" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">LinkedIn ↗</a>
-      &nbsp;·&nbsp;
-      <a href="https://giphy.com/asiyeaydinli" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Giphy ↗</a>
-    </div>
-    <div style="margin-top:1rem; color: #3a3a36;">
-      This page is password protected and intended for professional contacts only.
-    </div>
-  </div>
-
-</main>
-<div class="copy-toast" id="copy-toast">copied! ✓</div>
-
-
-<script>
-  /* ══════════════════════════════
-     CONFIG
-  ══════════════════════════════ */
-  const PW_HASH = "e302a419c6e74e9599d4f399dedc1cca06d40a0b42cd8709288da9c8c42be642";
-
-  async function checkPassword(input) {
-    const encoded = new TextEncoder().encode(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('') === PW_HASH;
-  }
-
-  const pwGate    = document.getElementById('pw-gate');
-  const portfolio = document.getElementById('portfolio');
-  const pwInput   = document.getElementById('pw-input');
-  const enterBtn  = document.getElementById('enter-btn');
-  const pwError   = document.getElementById('pw-error');
-  const toggleVis = document.getElementById('toggle-vis');
-
-  if (sessionStorage.getItem('pf_unlocked') === '1') {
-    portfolio.style.display = 'block';
-    pwGate.style.display = 'none';
-    document.getElementById('scroll-bar').style.display = 'block';
-    document.getElementById('lang-switcher').style.display = 'flex';
-    document.getElementById('portfolio-canvas').style.display = 'block';
-  }
-  enterBtn.addEventListener('click', unlock);
-  pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
-
-  toggleVis.addEventListener('click', () => {
-    const hidden = pwInput.type === 'password';
-    pwInput.type = hidden ? 'text' : 'password';
-    toggleVis.textContent = hidden ? 'hide' : 'show';
-  });
-
-  /* ══════════════════════════════
-     UNLOCK FLASH + SHOW PORTFOLIO
-  ══════════════════════════════ */
-  function showPortfolio() {
-    pwGate.style.display    = 'none';
-    const flash = document.createElement('div');
-    flash.className = 'unlock-flash';
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 700);
-    setTimeout(() => {
-      portfolio.style.display = 'block';
-      portfolio.classList.add('fade-in');
-      document.getElementById('portfolio-canvas').style.display = 'block';
-      document.getElementById('scroll-bar').style.display = 'block';
-      document.getElementById('lang-switcher').style.display = 'flex';
-    }, 200);
-  }
-
-  /* ══════════════════════════════
-     HINT BUTTON — MULTI CLICK
-  ══════════════════════════════ */
-  const hintMessages = [
-    "psst... need a hint? 🤫",
-    "are you sure? 👀",
-    "like... really sure? 🤨",
-    "ok fine... but don't tell anyone 🤐",
-    null // reveal!
-  ];
-  let hintStep = 0;
-
-  function hintClick() {
-    hintStep++;
-    const btn = document.getElementById('hint-btn');
-    const pwText = document.getElementById('pw-hint-text');
-    if (hintStep >= hintMessages.length - 1) {
-      btn.style.display = 'none';
-      pwText.classList.add('visible');
-      /* 2 saniye sonra kaybol, butonu geri getir */
-      setTimeout(() => {
-        pwText.classList.remove('visible');
-        hintStep = 0;
-        btn.textContent = hintMessages[0];
-        btn.style.display = '';
-      }, 2000);
-    } else {
-      btn.textContent = hintMessages[hintStep];
-    }
-  }
-
-  /* ══════════════════════════════
-     BEHANCE HINT BUTTON — MULTI CLICK
-  ══════════════════════════════ */
-  const behanceMessages = [
-    "🔑 psst... same key, all doors — click to peek",
-    "🔑 wait, you actually need this? 😏",
-    "🔑 you could just... ask me nicely 🥺",
-    "🔑 ok fine, you're persistent, i respect it 🫡",
-    null
-  ];
-  let behanceStep = 0;
-
-  function behanceHintClick() {
-    behanceStep++;
-    const btn = document.getElementById('behance-hint-btn');
-    const pwText = document.getElementById('behance-pw');
-    if (behanceStep >= behanceMessages.length - 1) {
-      btn.style.display = 'none';
-      pwText.classList.add('visible');
-      setTimeout(() => {
-        pwText.classList.remove('visible');
-        behanceStep = 0;
-        btn.textContent = behanceMessages[0];
-        btn.style.display = '';
-      }, 2000);
-    } else {
-      btn.textContent = behanceMessages[behanceStep];
-    }
-  }
-
-  window.addEventListener('scroll', () => {
-    const el  = document.documentElement;
-    const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
-    document.getElementById('scroll-bar').style.width = pct + '%';
-  });
-
-  /* ══════════════════════════════
-     LANGUAGE SWITCHER
-  ══════════════════════════════ */
-  function setLang(lang) {
-    document.querySelectorAll('.lang-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-    document.querySelectorAll('.lang-tr').forEach(el => el.style.display = lang === 'tr' ? '' : 'none');
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
-  }
-
-  /* ══════════════════════════════
-     GALAXY BACKGROUND
-  ══════════════════════════════ */
-  (function() {
-    const canvas = document.getElementById('galaxy-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [], shooters = [];
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      stars = [];
-      for (let i = 0; i < 120; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.2 + 0.2,
-          twinkle: Math.random() * Math.PI * 2,
-          speed: Math.random() * 0.02 + 0.005,
-          hue: Math.random() > 0.7 ? 270 : 240 /* purple or blue */
-        });
-      }
-    }
-
-    function spawnShooter() {
-      shooters.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * 0.5,
-        len: Math.random() * 80 + 40,
-        speed: Math.random() * 6 + 4,
-        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
-        life: 1
-      });
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      /* galaxy nebula glow */
-      const grd = ctx.createRadialGradient(
-        canvas.width * 0.6, canvas.height * 0.3, 0,
-        canvas.width * 0.6, canvas.height * 0.3, canvas.width * 0.5
-      );
-      grd.addColorStop(0, 'rgba(120,60,200,0.08)');
-      grd.addColorStop(0.5, 'rgba(60,30,120,0.04)');
-      grd.addColorStop(1, 'transparent');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      /* stars */
-      stars.forEach(s => {
-        s.twinkle += s.speed;
-        const alpha = (Math.sin(s.twinkle) * 0.5 + 0.5) * 0.5 + 0.05;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${s.hue}, 60%, 85%, ${alpha})`;
-        ctx.fill();
-      });
-
-      /* shooting stars */
-      shooters = shooters.filter(s => s.life > 0);
-      shooters.forEach(s => {
-        ctx.save();
-        ctx.globalAlpha = s.life * 0.6;
-        ctx.strokeStyle = 'rgba(200,168,240,0.8)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
-        ctx.stroke();
-        ctx.restore();
-        s.x += Math.cos(s.angle) * s.speed;
-        s.y += Math.sin(s.angle) * s.speed;
-        s.life -= 0.03;
-      });
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-    setInterval(draw, 40);
-    setInterval(spawnShooter, 4000);
-    setTimeout(spawnShooter, 1000);
-  })();
-
-  /* ══════════════════════════════
-     CURSOR TRAIL — SPARK
-  ══════════════════════════════ */
-  document.addEventListener('mousemove', (e) => {
-    if (Math.random() > 0.5) return;
-    const spark = document.createElement('canvas');
-    const size = 30;
-    spark.width = size;
-    spark.height = size;
-    spark.style.cssText = `
-      position:fixed;
-      left:${e.clientX - size/2}px;
-      top:${e.clientY - size/2}px;
-      pointer-events:none;
-      z-index:9999;
-    `;
-    document.body.appendChild(spark);
-
-    const ctx = spark.getContext('2d');
-    const cx = size / 2, cy = size / 2;
-    const angle = Math.random() * Math.PI * 2;
-    const len   = Math.random() * 10 + 6;
-    const hue   = 270 + Math.random() * 40;
-    let   life  = 1;
-
-    function draw() {
-      ctx.clearRect(0, 0, size, size);
-      ctx.save();
-      ctx.globalAlpha = life;
-      ctx.strokeStyle = `hsl(${hue}, 100%, ${70 + life * 20}%)`;
-      ctx.lineWidth   = 1.5;
-      ctx.shadowColor = `hsl(${hue}, 100%, 80%)`;
-      ctx.shadowBlur  = 6;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(
-        cx + Math.cos(angle) * len * life,
-        cy + Math.sin(angle) * len * life
-      );
-      ctx.stroke();
-      /* cross spark */
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(
-        cx + Math.cos(angle + Math.PI/2) * (len * 0.4) * life,
-        cy + Math.sin(angle + Math.PI/2) * (len * 0.4) * life
-      );
-      ctx.stroke();
-      ctx.restore();
-      life -= 0.07;
-      if (life > 0) requestAnimationFrame(draw);
-      else spark.remove();
-    }
-    requestAnimationFrame(draw);
-  });
-
-  /* ══════════════════════════════
-     COPY EMAIL
-  ══════════════════════════════ */
-  function copyEmail() {
-    navigator.clipboard.writeText('asiyeaydinlinetwork@gmail.com');
-    const toast = document.getElementById('copy-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  /* ══════════════════════════════
-     MATRIX RAIN
-  ══════════════════════════════ */
-  (function() {
-    const canvas = document.getElementById('glitch-canvas');
-    const ctx = canvas.getContext('2d');
-    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789ABCDEF@#$%';
-    let cols, drops;
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols  = Math.floor(canvas.width / 18);
-      drops = Array(cols).fill(1);
-    }
-
-    function draw() {
-      /* only run when gate is visible */
-      if (portfolio.style.display === 'block') return;
-
-      ctx.fillStyle = 'rgba(10,10,8,0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#c8a8f0';
-      ctx.font = '13px IBM Plex Mono, monospace';
-
-      drops.forEach((y, i) => {
-        const ch = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(ch, i * 18, y * 18);
-        if (y * 18 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      });
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-    setInterval(draw, 60);
-  })();
-
-
-  /* ══════════════════════════════
-     PORTFOLIO BACKGROUND PARTICLES
-  ══════════════════════════════ */
-  (function() {
-    const canvas = document.getElementById('portfolio-canvas');
-    const ctx = canvas.getContext('2d');
-    const charList = ['✦','◆','▪','·','✧','◇','▸','✕'];
-    const particles = [];
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    for (let i = 0; i < 28; i++) {
-      particles.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        char: charList[Math.floor(Math.random() * charList.length)],
-        size: Math.random() * 7 + 5,
-        speed: Math.random() * 0.25 + 0.08,
-        opacity: Math.random() * 0.35 + 0.08,
-        drift: (Math.random() - 0.5) * 0.25
-      });
-    }
-
-    function draw() {
-      if (portfolio.style.display !== 'block') return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        ctx.globalAlpha = p.opacity;
-        ctx.fillStyle = '#c8a8f0';
-        ctx.font = `${p.size}px monospace`;
-        ctx.fillText(p.char, p.x, p.y);
-        p.y -= p.speed;
-        p.x += p.drift;
-        if (p.y < -20) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
-        if (p.x < -20 || p.x > canvas.width + 20) p.x = Math.random() * canvas.width;
-      });
-      ctx.globalAlpha = 1;
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-    setInterval(draw, 50);
-  })();
-
-  /* ══════════════════════════════
-     WRONG PASSWORD EASTER EGG
-  ══════════════════════════════ */
-  let wrongCount = 0;
-  const easterMessages = [
-    "nice try though 👀",
-    "still no... 🗝",
-    "are you sure you have the key? 🤫",
-    "ok now you're just guessing 😂",
-    "the password is definitely not 'password' 💀"
-  ];
-
-  async function unlock() {
-    const ok = await checkPassword(pwInput.value);
-    if (ok) {
-      wrongCount = 0;
-      pwGate.style.display = 'none';
-      showPortfolio();
-      sessionStorage.setItem('pf_unlocked', '1');
-    } else {
-      wrongCount++;
-      const msg = wrongCount >= 3
-        ? easterMessages[Math.min(wrongCount - 3, easterMessages.length - 1)]
-        : 'incorrect password.';
-      pwError.textContent = msg;
-      pwInput.classList.add('error');
-      pwInput.value = '';
-      /* extra shake on 3+ attempts */
-      if (wrongCount >= 3) {
-        document.querySelector('.gate-title').style.animation = 'none';
-        setTimeout(() => document.querySelector('.gate-title').style.animation = '', 50);
-      }
-      setTimeout(() => {
-        pwInput.classList.remove('error');
-        pwError.textContent = '';
-      }, 2500);
-    }
-  }
-
-  /* ══════════════════════════════
-     CONFETTI ON REVEAL
-  ══════════════════════════════ */
-  function spawnConfetti(x, y) {
-    const colors = ['#c8a8f0','#a8d8f0','#f0c8e8','#d8a8f0','#ffffff','#f0e8c8'];
-    for (let i = 0; i < 18; i++) {
-      const p = document.createElement('div');
-      const size = Math.random() * 6 + 3;
-      const angle = Math.random() * Math.PI * 2;
-      const dist  = Math.random() * 80 + 40;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      p.style.cssText = `
-        position:fixed;
-        left:${x}px; top:${y}px;
-        width:${size}px; height:${size}px;
-        background:${color};
-        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
-        pointer-events:none;
-        z-index:9999;
-        transition: transform 0.7s ease-out, opacity 0.7s ease-out;
-      `;
-      document.body.appendChild(p);
-      requestAnimationFrame(() => {
-        p.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist - 40}px) rotate(${Math.random()*360}deg)`;
-        p.style.opacity = '0';
-      });
-      setTimeout(() => p.remove(), 800);
-    }
-  }
-
-  function revealLink(btn) {
-    const rect = btn.getBoundingClientRect();
-    spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
-    const link = btn.nextElementSibling;
-    btn.style.display = 'none';
-    link.classList.add('revealed');
-  }
-</script>
+  <script src="js/site.js"></script>
 </body>
 </html>
