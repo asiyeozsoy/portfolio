@@ -200,8 +200,15 @@ button {
   user-select: none;
 }
 
-.h-track .tile.nda {
-  flex-basis: 12.4rem;
+.games-open,
+.games-nda {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.games-open {
+  margin-bottom: 1rem;
 }
 
 .tile.nda {
@@ -475,6 +482,11 @@ body.page-about .nav a:not([aria-current="page"]) {
   .grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .games-open,
+  .games-nda {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -486,7 +498,9 @@ body.page-about .nav a:not([aria-current="page"]) {
   }
 
   .about-layout,
-  .grid {
+  .grid,
+  .games-open,
+  .games-nda {
     grid-template-columns: 1fr;
   }
 
