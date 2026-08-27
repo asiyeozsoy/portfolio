@@ -435,6 +435,14 @@ button {
   display: block;
 }
 
+.personal .tile-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: transparent;
+}
+
 .personal .tile[hidden] {
   display: none;
 }
