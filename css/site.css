@@ -234,12 +234,22 @@ button {
   color: inherit;
 }
 
-.tile img {
+.tile img,
+.tile-video {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   background: var(--surface);
   border: 1px solid var(--line);
+}
+
+.tile-video {
+  display: block;
+  pointer-events: none;
+}
+
+.tile-video::-webkit-media-controls {
+  display: none !important;
 }
 
 .tile-label {
@@ -310,13 +320,28 @@ button {
 }
 
 .portrait-hang {
-  transform-origin: top center;
-  animation: portrait-sway 9s ease-in-out infinite;
+  position: relative;
+  transform-origin: 50% 3%;
+  animation: portrait-sway 12s ease-in-out infinite;
 }
 
-.portrait img {
+.portrait-frame {
+  position: relative;
+  z-index: 1;
+  display: block;
   width: 100%;
-  aspect-ratio: 1;
+  height: auto;
+  aspect-ratio: 626 / 781;
+  pointer-events: none;
+}
+
+.portrait-photo {
+  position: absolute;
+  z-index: 0;
+  top: 15.7%;
+  left: 16%;
+  width: 64.5%;
+  height: 50.6%;
   object-fit: cover;
   object-position: center top;
   background: transparent;
@@ -392,19 +417,13 @@ button {
   margin-top: 1.4rem;
 }
 
-.personal .featured {
-  display: block;
-}
-
-.personal-more {
+.personal-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 1rem;
+  gap: 1rem;
 }
 
-.personal-more:empty {
-  display: none;
+.personal .tile {
+  display: block;
 }
 
 .giphy-block {
