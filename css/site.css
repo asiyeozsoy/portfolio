@@ -109,12 +109,12 @@ button {
   margin-bottom: 3.2rem;
 }
 
-.games-track-wrap {
+.h-track-wrap {
   position: relative;
 }
 
-.games-track-wrap::before,
-.games-track-wrap::after {
+.h-track-wrap::before,
+.h-track-wrap::after {
   content: "";
   position: absolute;
   top: 0;
@@ -122,38 +122,61 @@ button {
   width: 3.2rem;
   pointer-events: none;
   z-index: 2;
+  opacity: 1;
 }
 
-.games-track-wrap::before {
+.h-track-wrap::before {
   left: 0;
   background: linear-gradient(90deg, var(--fade), transparent);
 }
 
-.games-track-wrap::after {
+.h-track-wrap::after {
   right: 0;
   background: linear-gradient(270deg, var(--fade), transparent);
 }
 
-.games-track {
-  display: flex;
-  gap: 1rem;
+.h-track-wrap.is-start::before,
+.h-track-wrap.is-end::after {
+  opacity: 0;
+}
+
+.h-track {
   overflow-x: auto;
-  padding: 0.2rem 1.4rem 0.6rem;
+  padding: 0.2rem 0;
   scroll-snap-type: x proximity;
+  cursor: grab;
+  overscroll-behavior-x: contain;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-.games-track::-webkit-scrollbar {
+.h-track::-webkit-scrollbar {
   display: none;
 }
 
-.games-track .tile {
+.h-track.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.h-track-inner {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  padding: 0 1.4rem 0.4rem;
+}
+
+.h-track .tile {
   flex: 0 0 16.5rem;
   scroll-snap-align: start;
 }
 
-.games-track .tile.nda {
+.h-track .tile img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.h-track .tile.nda {
   flex-basis: 12.4rem;
   opacity: 0.55;
   pointer-events: none;
@@ -371,19 +394,30 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .games-track-wrap::before,
-  .games-track-wrap::after {
+  .h-track-wrap:not(.h-track-wrap--stack)::before,
+  .h-track-wrap:not(.h-track-wrap--stack)::after {
+    width: 2rem;
+  }
+
+  .h-track-wrap--stack::before,
+  .h-track-wrap--stack::after {
     display: none;
   }
 
-  .games-track {
-    display: block;
+  .h-track-wrap--stack .h-track {
     overflow: visible;
+    padding: 0;
+    cursor: default;
+  }
+
+  .h-track-wrap--stack .h-track-inner {
+    display: block;
+    width: auto;
     padding: 0;
   }
 
-  .games-track .tile,
-  .games-track .tile.nda {
+  .h-track-wrap--stack .tile,
+  .h-track-wrap--stack .tile.nda {
     flex: none;
     width: 100%;
     margin-bottom: 1rem;
