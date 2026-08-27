@@ -204,15 +204,11 @@ button {
 .games-nda {
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .games-open {
-  grid-template-columns: repeat(2, minmax(0, 16.5rem));
   margin-bottom: 1rem;
-}
-
-.games-nda {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .tile.nda {
@@ -487,6 +483,7 @@ body.page-about .nav a:not([aria-current="page"]) {
     grid-template-columns: 1fr 1fr;
   }
 
+  .games-open,
   .games-nda {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
