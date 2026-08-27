@@ -8,18 +8,6 @@
   --fade: #14110e;
 }
 
-/* About only: paper white from img/asiye.jpg (#ffffff) + warm ink. Work stays dark. */
-html:has(body.page-about),
-body.page-about {
-  --bg: #ffffff;
-  --text: var(--ink);
-  --muted: #3f3934;
-  --surface: #ffffff;
-  --line: rgba(20, 17, 14, 0.16);
-  --fade: #ffffff;
-  color-scheme: light;
-}
-
 *,
 *::before,
 *::after {
@@ -317,65 +305,44 @@ button {
   align-items: start;
 }
 
+.portrait {
+  margin: 0;
+}
+
+.portrait-hang {
+  transform-origin: top center;
+  animation: portrait-sway 9s ease-in-out infinite;
+}
+
 .portrait img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   object-position: center top;
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-
-body.page-about .portrait img {
   background: transparent;
   border: 0;
-  box-shadow: none;
 }
 
-body.page-about .bio,
-body.page-about .hobby,
-body.page-about .how p,
-body.page-about .how h2,
-body.page-about .credit,
-body.page-about .tools,
-body.page-about .status,
-body.page-about .role,
-body.page-about .muted,
-body.page-about .copy h1 {
-  color: var(--ink);
+@keyframes portrait-sway {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+
+  50% {
+    transform: rotate(1.2deg);
+  }
 }
 
-body.page-about .contact {
+@media (prefers-reduced-motion: reduce) {
+  .portrait-hang {
+    animation: none;
+  }
+}
+
+.about-page .contact {
   margin-top: 3.5rem;
   padding: 0 0 0.5rem;
-}
-
-body.page-about .email-copy {
-  color: var(--ink);
-  border-bottom: 1px solid rgba(20, 17, 14, 0.28);
-}
-
-body.page-about .email-copy:hover,
-body.page-about .email-copy.copied {
-  color: var(--ink);
-}
-
-body.page-about .contact-links a,
-body.page-about .nda-note,
-body.page-about .kicker,
-body.page-about .tile-label {
-  color: var(--ink);
-}
-
-body.page-about .tile:not(.nda):hover .tile-label,
-body.page-about .contact-links a:hover,
-body.page-about .nav a:hover,
-body.page-about .nav a[aria-current="page"] {
-  color: var(--ink);
-}
-
-body.page-about .nav a:not([aria-current="page"]) {
-  color: #3f3934;
 }
 
 .copy h1 {
