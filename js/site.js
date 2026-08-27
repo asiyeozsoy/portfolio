@@ -216,7 +216,43 @@ function bindWordmarkLight() {
   });
 }
 
+function bindPersonalCarousel() {
+  document.querySelectorAll("[data-personal-carousel]").forEach((root) => {
+    const slides = Array.from(root.querySelectorAll(".tile"));
+    const prev = root.querySelector("[data-personal-prev]");
+    const next = root.querySelector("[data-personal-next]");
+    if (slides.length < 2) return;
+
+    let index = Math.max(
+      0,
+      slides.findIndex((slide) => slide.classList.contains("is-active"))
+    );
+
+    function show(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle("is-active", active);
+        slide.hidden = !active;
+        const video = slide.querySelector("video");
+        if (!video) return;
+        if (active) {
+          const play = video.play();
+          if (play && play.catch) play.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    if (prev) prev.addEventListener("click", () => show(index - 1));
+    if (next) next.addEventListener("click", () => show(index + 1));
+    show(index);
+  });
+}
+
 bindHTracks();
 bindCopyEmail();
 bindWordmarkLight();
+bindPersonalCarousel();
 loadGiphy();
