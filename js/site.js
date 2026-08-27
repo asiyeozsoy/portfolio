@@ -9,20 +9,101 @@ const GIPHY_FALLBACK_IDS = [
   "7rlAQ69VJXoTeKxa9x"
 ];
 
-function bindGamesTrack() {
-  const track = document.querySelector(".games-track");
-  if (!track) return;
+function bindHTracks() {
+  document.querySelectorAll(".h-track").forEach(bindHTrack);
+}
+
+function bindHTrack(track) {
+  const wrap = track.closest(".h-track-wrap");
+  const inner = track.querySelector(".h-track-inner") || track;
+  const dragThreshold = 6;
+  let pointerId = null;
+  let startX = 0;
+  let startScroll = 0;
+  let dragged = false;
+
+  function canScroll() {
+    return track.scrollWidth - track.clientWidth > 2;
+  }
+
+  function updateFades() {
+    if (!wrap) return;
+    const max = track.scrollWidth - track.clientWidth;
+    const left = track.scrollLeft;
+    wrap.classList.toggle("is-start", left <= 1 || max <= 2);
+    wrap.classList.toggle("is-end", left >= max - 1 || max <= 2);
+  }
 
   track.addEventListener(
     "wheel",
     (event) => {
-      if (window.matchMedia("(max-width: 720px)").matches) return;
+      if (!canScroll()) return;
       if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
       event.preventDefault();
       track.scrollLeft += event.deltaY;
     },
     { passive: false }
   );
+
+  track.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "touch") return;
+    if (event.button !== 0) return;
+    if (!canScroll()) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startScroll = track.scrollLeft;
+    dragged = false;
+    track.setPointerCapture(event.pointerId);
+    track.classList.add("is-dragging");
+  });
+
+  track.addEventListener("pointermove", (event) => {
+    if (pointerId !== event.pointerId) return;
+    const delta = event.clientX - startX;
+    if (Math.abs(delta) > dragThreshold) dragged = true;
+    track.scrollLeft = startScroll - delta;
+  });
+
+  function endDrag(event) {
+    if (pointerId !== event.pointerId) return;
+    pointerId = null;
+    track.classList.remove("is-dragging");
+    if (track.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  track.addEventListener("pointerup", endDrag);
+  track.addEventListener("pointercancel", endDrag);
+
+  track.addEventListener(
+    "click",
+    (event) => {
+      if (!dragged) return;
+      event.preventDefault();
+      event.stopPropagation();
+      dragged = false;
+    },
+    true
+  );
+
+  track.addEventListener("dragstart", (event) => event.preventDefault());
+  track.addEventListener("scroll", updateFades, { passive: true });
+  window.addEventListener("resize", updateFades);
+  window.addEventListener("load", updateFades);
+
+  if (typeof ResizeObserver !== "undefined") {
+    const observer = new ResizeObserver(updateFades);
+    observer.observe(track);
+    observer.observe(inner);
+  }
+
+  track.querySelectorAll("img").forEach((img) => {
+    if (!img.complete) img.addEventListener("load", updateFades, { once: true });
+  });
+
+  updateFades();
+  requestAnimationFrame(updateFades);
 }
 
 function bindCopyEmail() {
@@ -90,6 +171,6 @@ async function loadGiphy() {
   renderGiphy(ids);
 }
 
-bindGamesTrack();
+bindHTracks();
 bindCopyEmail();
 loadGiphy();
