@@ -24,7 +24,8 @@
     <section class="about-layout">
       <figure class="portrait">
         <div class="portrait-hang">
-          <img src="img/asiye.jpg" alt="Portrait of Asiye Özsoy">
+          <img class="portrait-photo" src="img/asiye.jpg" alt="Portrait of Asiye Özsoy">
+          <img class="portrait-frame" src="img/about-frame.png" alt="">
         </div>
       </figure>
 
@@ -49,12 +50,15 @@
 
       <aside id="personal" class="personal">
         <p class="kicker">Personal</p>
-        <a class="tile featured" href="https://www.linkedin.com/feed/update/urn:li:activity:7357899115101356032/" target="_blank" rel="noopener">
-          <img src="img/yunara.jpg" alt="Yunara fan animation still">
-          <span class="tile-label">League of Legends - Yunara fan animation</span>
-        </a>
+        <div class="personal-list">
+          <article class="tile">
+            <video class="tile-video" autoplay muted loop playsinline poster="img/yunara.jpg" preload="metadata" aria-label="Yunara fan animation">
+              <source src="img/yunara-loop.mp4" type="video/mp4">
+            </video>
+            <a class="tile-label" href="https://www.linkedin.com/feed/update/urn:li:activity:7357899115101356032/" target="_blank" rel="noopener">League of Legends - Yunara fan animation</a>
+          </article>
+        </div>
         <p class="credit">I did not draw this illustration. I animated an existing piece in Spine, with extra FX in After Effects.</p>
-        <div class="personal-more"></div>
       </aside>
     </section>
 
