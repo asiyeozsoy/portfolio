@@ -178,7 +178,7 @@ function bindWordmarkLight() {
     return;
   }
 
-  const reach = 130;
+  const reach = 160;
   let frame = 0;
   let latestX = 0;
   let latestY = 0;

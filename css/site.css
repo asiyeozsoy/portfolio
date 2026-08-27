@@ -78,8 +78,9 @@ button {
   letter-spacing: 0.02em;
   font-size: 13px;
   line-height: 1.15;
-  color: color-mix(in srgb, var(--text) calc(52% + var(--wordmark-lit) * 48%), var(--muted));
-  text-shadow: 0 0 calc(var(--wordmark-lit) * 12px) color-mix(in srgb, var(--text) calc(var(--wordmark-lit) * 32%), transparent);
+  color: var(--text);
+  opacity: calc(0.42 + var(--wordmark-lit) * 0.58);
+  text-shadow: 0 0 calc(var(--wordmark-lit) * 16px) color-mix(in srgb, var(--text) calc(var(--wordmark-lit) * 45%), transparent);
 }
 
 @media (hover: none), (prefers-reduced-motion: reduce) {
