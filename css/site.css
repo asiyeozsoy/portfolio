@@ -1,10 +1,23 @@
 :root {
   --bg: #14110e;
+  --ink: #14110e;
   --text: #e8e2d8;
   --muted: #8a8074;
   --surface: #1b1713;
   --line: rgba(232, 226, 216, 0.1);
   --fade: #14110e;
+}
+
+/* About only: paper white from img/asiye.jpg (#ffffff) + warm ink. Work stays dark. */
+html:has(body.page-about),
+body.page-about {
+  --bg: #ffffff;
+  --text: var(--ink);
+  --muted: #3f3934;
+  --surface: #ffffff;
+  --line: rgba(20, 17, 14, 0.16);
+  --fade: #ffffff;
+  color-scheme: light;
 }
 
 *,
@@ -279,6 +292,58 @@ button {
   object-position: center top;
   background: var(--surface);
   border: 1px solid var(--line);
+}
+
+body.page-about .portrait img {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.page-about .bio,
+body.page-about .hobby,
+body.page-about .how p,
+body.page-about .how h2,
+body.page-about .credit,
+body.page-about .tools,
+body.page-about .status,
+body.page-about .role,
+body.page-about .muted,
+body.page-about .copy h1 {
+  color: var(--ink);
+}
+
+body.page-about .contact {
+  margin-top: 3.5rem;
+  padding: 0 0 0.5rem;
+}
+
+body.page-about .email-copy {
+  color: var(--ink);
+  border-bottom: 1px solid rgba(20, 17, 14, 0.28);
+}
+
+body.page-about .email-copy:hover,
+body.page-about .email-copy.copied {
+  color: var(--ink);
+}
+
+body.page-about .contact-links a,
+body.page-about .nda-note,
+body.page-about .kicker,
+body.page-about .tile-label {
+  color: var(--ink);
+}
+
+body.page-about .tile:not(.nda):hover .tile-label,
+body.page-about .contact-links a:hover,
+body.page-about .nav a:hover,
+body.page-about .nav a[aria-current="page"] {
+  color: var(--ink);
+}
+
+body.page-about .nav a:not([aria-current="page"]) {
+  color: #3f3934;
 }
 
 .copy h1 {
