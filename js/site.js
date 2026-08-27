@@ -241,6 +241,7 @@ function bindPersonalCarousel() {
           if (play && play.catch) play.catch(() => {});
         } else {
           video.pause();
+          if (video.readyState > 0) video.currentTime = 0;
         }
       });
     }
