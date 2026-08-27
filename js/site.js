@@ -90,6 +90,7 @@ function bindHTrack(track) {
   track.addEventListener("dragstart", (event) => event.preventDefault());
   track.addEventListener("scroll", updateFades, { passive: true });
   window.addEventListener("resize", updateFades);
+  window.addEventListener("load", updateFades);
 
   if (typeof ResizeObserver !== "undefined") {
     const observer = new ResizeObserver(updateFades);
@@ -102,6 +103,7 @@ function bindHTrack(track) {
   });
 
   updateFades();
+  requestAnimationFrame(updateFades);
 }
 
 function bindCopyEmail() {
