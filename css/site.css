@@ -460,6 +460,26 @@ button {
   margin-top: 3.5rem;
 }
 
+.giphy-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.giphy-head .kicker {
+  margin: 0;
+}
+
+.giphy-views {
+  font-size: 0.78rem;
+}
+
+.giphy-views:hover {
+  color: var(--text);
+}
+
 .giphy-strip {
   display: flex;
   gap: 0.7rem;
