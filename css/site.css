@@ -73,10 +73,21 @@ button {
 }
 
 .wordmark {
+  --wordmark-lit: 0;
   font-weight: 600;
   letter-spacing: 0.02em;
   font-size: 13px;
   line-height: 1.15;
+  color: var(--text);
+  opacity: calc(0.42 + var(--wordmark-lit) * 0.58);
+  text-shadow: 0 0 calc(var(--wordmark-lit) * 16px) color-mix(in srgb, var(--text) calc(var(--wordmark-lit) * 45%), transparent);
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .wordmark {
+    --wordmark-lit: 1;
+    text-shadow: none;
+  }
 }
 
 .nav {
@@ -191,10 +202,31 @@ button {
 
 .h-track .tile.nda {
   flex-basis: 12.4rem;
-  opacity: 0.55;
+}
+
+.tile.nda {
+  position: relative;
   pointer-events: none;
   cursor: default;
-  filter: saturate(0.7);
+}
+
+.tile.nda img {
+  filter: saturate(0.75);
+}
+
+.tile.nda::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8e2d8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E")
+      center 46% / 1.4rem no-repeat,
+    radial-gradient(circle at 50% 46%, rgba(20, 17, 14, 0.42) 0 1.15rem, transparent 1.9rem),
+    rgba(20, 17, 14, 0.28);
 }
 
 .nda-note {
