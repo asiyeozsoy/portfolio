@@ -50,13 +50,39 @@
 
       <aside id="personal" class="personal">
         <p class="kicker">Personal</p>
-        <div class="personal-list">
-          <article class="tile">
-            <video class="tile-video" autoplay muted loop playsinline poster="img/yunara.jpg" preload="metadata" aria-label="Yunara fan animation">
-              <source src="img/yunara-loop.mp4" type="video/mp4">
-            </video>
-            <a class="tile-label" href="https://www.linkedin.com/feed/update/urn:li:activity:7357899115101356032/" target="_blank" rel="noopener">League of Legends - Yunara fan animation</a>
-          </article>
+        <div class="personal-carousel" data-personal-carousel>
+          <div class="personal-list">
+            <article class="tile is-active">
+              <video class="tile-video" autoplay muted loop playsinline poster="img/yunara.jpg" preload="metadata" aria-label="Yunara fan animation">
+                <source src="img/yunara-loop.mp4" type="video/mp4">
+              </video>
+              <a class="tile-label" href="https://www.linkedin.com/feed/update/urn:li:activity:7357899115101356032/" target="_blank" rel="noopener">League of Legends - Yunara fan animation</a>
+            </article>
+            <article class="tile" hidden>
+              <img src="img/personal-solitaire-cat.jpg" alt="Sunday Solitaire — Cat">
+              <a class="tile-label" href="https://www.instagram.com/p/ClduxWMs3Cm/" target="_blank" rel="noopener">Sunday Solitaire — Cat</a>
+            </article>
+            <article class="tile" hidden>
+              <img src="img/personal-windy-card.jpg" alt="Sunday Solitaire — Windy Card">
+              <a class="tile-label" href="https://www.instagram.com/p/Cldty2NLlSh/" target="_blank" rel="noopener">Sunday Solitaire — Windy Card</a>
+            </article>
+            <article class="tile" hidden>
+              <img src="img/personal-walk.jpg" alt="Walk cycle">
+              <a class="tile-label" href="https://www.instagram.com/p/CljeFQyJme7/" target="_blank" rel="noopener">Walk cycle</a>
+            </article>
+            <article class="tile" hidden>
+              <img src="img/personal-icons.jpg" alt="Game icons">
+              <a class="tile-label" href="https://www.instagram.com/p/Cmw6_56Biag/" target="_blank" rel="noopener">Game icons</a>
+            </article>
+            <article class="tile" hidden>
+              <img src="img/personal-states.jpg" alt="Character states">
+              <a class="tile-label" href="https://www.instagram.com/p/DSkCYlcCFQP/" target="_blank" rel="noopener">Character states</a>
+            </article>
+          </div>
+          <div class="personal-nav">
+            <button type="button" data-personal-prev aria-label="Previous">&lt;</button>
+            <button type="button" data-personal-next aria-label="Next">&gt;</button>
+          </div>
         </div>
         <p class="credit">I did not draw this illustration. I animated an existing piece in Spine, with extra FX in After Effects.</p>
       </aside>
