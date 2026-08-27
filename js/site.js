@@ -171,6 +171,52 @@ async function loadGiphy() {
   renderGiphy(ids);
 }
 
+function bindWordmarkLight() {
+  const mark = document.querySelector(".wordmark");
+  if (!mark) return;
+  if (window.matchMedia("(hover: none), (prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const reach = 130;
+  let frame = 0;
+  let latestX = 0;
+  let latestY = 0;
+
+  function distanceToMark(x, y) {
+    const box = mark.getBoundingClientRect();
+    const dx = Math.max(box.left - x, 0, x - box.right);
+    const dy = Math.max(box.top - y, 0, y - box.bottom);
+    return Math.hypot(dx, dy);
+  }
+
+  function lightFromPoint(x, y) {
+    const t = Math.max(0, 1 - distanceToMark(x, y) / reach);
+    const lit = t * t * (3 - 2 * t);
+    mark.style.setProperty("--wordmark-lit", lit.toFixed(3));
+  }
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      if (event.pointerType === "touch") return;
+      latestX = event.clientX;
+      latestY = event.clientY;
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        lightFromPoint(latestX, latestY);
+      });
+    },
+    { passive: true }
+  );
+
+  document.documentElement.addEventListener("mouseleave", () => {
+    mark.style.setProperty("--wordmark-lit", "0");
+  });
+}
+
 bindHTracks();
 bindCopyEmail();
+bindWordmarkLight();
 loadGiphy();

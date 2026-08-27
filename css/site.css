@@ -73,10 +73,20 @@ button {
 }
 
 .wordmark {
+  --wordmark-lit: 0;
   font-weight: 600;
   letter-spacing: 0.02em;
   font-size: 13px;
   line-height: 1.15;
+  color: color-mix(in srgb, var(--text) calc(52% + var(--wordmark-lit) * 48%), var(--muted));
+  text-shadow: 0 0 calc(var(--wordmark-lit) * 12px) color-mix(in srgb, var(--text) calc(var(--wordmark-lit) * 32%), transparent);
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .wordmark {
+    --wordmark-lit: 1;
+    text-shadow: none;
+  }
 }
 
 .nav {
