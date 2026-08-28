@@ -313,12 +313,24 @@ button {
 .about-layout {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr 1fr;
+  grid-template-areas:
+    "portrait copy personal"
+    "giphy giphy personal";
   gap: 2.4rem;
   align-items: start;
 }
 
 .portrait {
+  grid-area: portrait;
   margin: 0;
+}
+
+.copy {
+  grid-area: copy;
+}
+
+.personal {
+  grid-area: personal;
 }
 
 .portrait-hang {
@@ -467,7 +479,9 @@ button {
 }
 
 .giphy-block {
-  margin-top: 3.5rem;
+  grid-area: giphy;
+  margin-top: 2rem;
+  min-width: 0;
 }
 
 .giphy-head {
@@ -513,10 +527,10 @@ button {
 @media (max-width: 980px) {
   .about-layout {
     grid-template-columns: 1fr 1.2fr;
-  }
-
-  .personal {
-    grid-column: 1 / -1;
+    grid-template-areas:
+      "portrait copy"
+      "personal personal"
+      "giphy giphy";
   }
 
   .grid {
@@ -535,6 +549,14 @@ button {
   .about-layout,
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .about-layout {
+    grid-template-areas:
+      "portrait"
+      "copy"
+      "personal"
+      "giphy";
   }
 
   .h-track-wrap:not(.h-track-wrap--stack)::before,
