@@ -318,6 +318,7 @@ button {
     "giphy giphy personal";
   gap: 2.4rem;
   align-items: start;
+  align-content: start;
 }
 
 .portrait {
