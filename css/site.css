@@ -414,6 +414,18 @@ button {
   color: var(--muted);
 }
 
+.personal > .credit-walk {
+  display: none;
+}
+
+.personal:has(.tile.is-active[data-credit]) > .credit:not(.credit-walk) {
+  display: none;
+}
+
+.personal:has(.tile.is-active[data-credit]) > .credit-walk {
+  display: block;
+}
+
 .hobby {
   margin-top: 1rem;
 }
