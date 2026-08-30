@@ -221,8 +221,6 @@ function bindPersonalCarousel() {
     const slides = Array.from(root.querySelectorAll(".tile"));
     const prev = root.querySelector("[data-personal-prev]");
     const next = root.querySelector("[data-personal-next]");
-    const credit = root.parentElement && root.parentElement.querySelector(":scope > .credit");
-    const defaultCredit = credit ? credit.textContent : "";
     if (slides.length < 2) return;
 
     let index = Math.max(
@@ -246,9 +244,6 @@ function bindPersonalCarousel() {
           if (video.readyState > 0) video.currentTime = 0;
         }
       });
-      if (credit) {
-        credit.textContent = slides[index].getAttribute("data-credit") || defaultCredit;
-      }
     }
 
     if (prev) prev.addEventListener("click", () => show(index - 1));
