@@ -1,21 +1,11 @@
-# TODO: original Jump Cat! HTML5 files
+# TODO: remaining original Jump Cat! files
 
-This folder is a **hosting shell only**. It is not a recreation of the game.
+`index.html` and `style.css` are in `jump-cat/game/`. The site is not playable yet.
 
-The original `cati-kedi` build is not in this repository. Copy these files from that build into `jump-cat/game/`:
+Still needed from the original `cati-kedi` build (do not recreate, do not redraw pixel art):
 
-- `index.html`
-- `game.js`
-- `style.css`
-- `img/*` (pixel art, logo, start-screen frames — do not redraw)
+- `game.js` (full original file)
+- `img/*` — logo.png, idle.png, smile.png, coin.png, sun.png, moon.png, cloud.png, bolt.png, 1.png, 2.png, 3.png, bike-0.png, bike-1.png, bike-2.png, bike-3.png, floor.png, floor-far.png, fg-trees.png, plus remaining bldg/city PNGs
+- Replace `thumbs/jump-cat.jpg` with `logo.png` or a start-screen still once that PNG is on disk
 
-Expected original game:
-
-- Title: **Jump Cat!**
-- Canvas: `DESIGN_W` 360 × `DESIGN_H` 640
-- Font: Pixelify Sans
-- Play: tap/click to jump, shop, score
-
-After the files are in `jump-cat/game/`, this page (`/jump-cat/`) will load them automatically.
-
-Then replace `thumbs/jump-cat.jpg` with the game logo, or a still from the start screen, using the same 16:10 tile treatment as the other Games covers.
+Do not merge to main until `game.js` is in and the iframe loads the real game.
