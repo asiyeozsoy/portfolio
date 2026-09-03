@@ -48,19 +48,32 @@ function bindHTrack(track) {
   track.addEventListener("pointerdown", (event) => {
     if (event.pointerType === "touch") return;
     if (event.button !== 0) return;
+    dragged = false;
     if (!canScroll()) return;
     pointerId = event.pointerId;
     startX = event.clientX;
     startScroll = track.scrollLeft;
-    dragged = false;
-    track.setPointerCapture(event.pointerId);
-    track.classList.add("is-dragging");
   });
 
   track.addEventListener("pointermove", (event) => {
     if (pointerId !== event.pointerId) return;
+    if ((event.buttons & 1) === 0) {
+      endDrag(event);
+      return;
+    }
     const delta = event.clientX - startX;
-    if (Math.abs(delta) > dragThreshold) dragged = true;
+    if (!dragged) {
+      if (Math.abs(delta) <= dragThreshold) return;
+      dragged = true;
+      track.classList.add("is-dragging");
+      if (typeof track.setPointerCapture === "function") {
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch (error) {
+          /* pointer may already be released */
+        }
+      }
+    }
     track.scrollLeft = startScroll - delta;
   });
 
@@ -68,13 +81,15 @@ function bindHTrack(track) {
     if (pointerId !== event.pointerId) return;
     pointerId = null;
     track.classList.remove("is-dragging");
-    if (track.hasPointerCapture(event.pointerId)) {
+    if (typeof track.hasPointerCapture === "function" && track.hasPointerCapture(event.pointerId)) {
       track.releasePointerCapture(event.pointerId);
     }
   }
 
   track.addEventListener("pointerup", endDrag);
   track.addEventListener("pointercancel", endDrag);
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", endDrag);
 
   track.addEventListener(
     "click",
