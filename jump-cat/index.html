@@ -3,13 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jump Cat! — Asiye Özsoy</title>
-  <meta name="description" content="Play Jump Cat! in the browser. Tap or click to jump.">
+  <title>Jump Cat! (personal project) — Asiye Özsoy</title>
+  <meta name="description" content="Jump Cat! personal project.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/site.css">
-  <link rel="stylesheet" href="shell.css">
+  <style>
+    .jump-cat-main {
+      padding: 0 6vw 3rem;
+    }
+
+    .jump-cat-main .tile-video {
+      width: min(100%, 48rem);
+      max-height: calc(100svh - 7rem);
+      aspect-ratio: auto;
+      object-fit: contain;
+      margin: 0 auto;
+      background: #14110e;
+      border: 0;
+    }
+
+    @media (max-width: 720px) {
+      .jump-cat-main {
+        padding-left: 1.15rem;
+        padding-right: 1.15rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -21,18 +42,10 @@
     </nav>
   </header>
 
-  <main class="play-main">
-    <div class="play-stage" aria-label="Jump Cat!">
-      <iframe id="game-frame" title="Jump Cat!" hidden></iframe>
-      <div id="game-waiting" class="play-waiting">
-        <p class="play-title">Jump Cat!</p>
-        <p class="play-sub">The original HTML5 game will load here once the cati-kedi files are in this folder.</p>
-        <p class="play-hint">Tap / click to jump</p>
-      </div>
-    </div>
+  <main class="jump-cat-main">
+    <video class="tile-video" autoplay muted loop playsinline poster="../thumbs/jump-cat.jpg" src="../thumbs/jump-cat.mp4"></video>
   </main>
 
   <script src="../js/site.js"></script>
-  <script src="shell.js"></script>
 </body>
 </html>
