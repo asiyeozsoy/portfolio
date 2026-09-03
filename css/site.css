@@ -183,7 +183,8 @@ button {
   scroll-snap-align: start;
 }
 
-.h-track .tile img {
+.h-track .tile img,
+.h-track .tile-video {
   -webkit-user-drag: none;
   user-select: none;
 }
