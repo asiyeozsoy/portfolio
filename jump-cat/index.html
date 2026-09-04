@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jump Cat! (personal project) — Asiye Özsoy</title>
-  <meta name="description" content="Jump Cat! personal project.">
+  <meta name="description" content="Jump Cat! personal project. Art direction by Asiye Özsoy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
@@ -14,20 +14,57 @@
       padding: 0 6vw 3rem;
     }
 
+    .jump-cat-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(15.5rem, 22rem);
+      gap: 2rem 3rem;
+      align-items: start;
+    }
+
     .jump-cat-main .tile-video {
-      width: min(100%, 48rem);
+      width: 100%;
       max-height: calc(100svh - 7rem);
       aspect-ratio: auto;
       object-fit: contain;
-      margin: 0 auto;
+      margin: 0;
       background: #14110e;
       border: 0;
     }
 
-    @media (max-width: 720px) {
+    .jump-cat-logo {
+      display: block;
+      width: min(100%, 18rem);
+      height: auto;
+      margin: 0 0 1.2rem;
+      background: #14110e;
+      border: 0;
+    }
+
+    .jump-cat-copy h1 {
+      margin: 0 0 0.85rem;
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+      font-weight: 600;
+    }
+
+    .jump-cat-copy p {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      max-width: 28rem;
+    }
+
+    .jump-cat-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 800px) {
       .jump-cat-main {
         padding-left: 1.15rem;
         padding-right: 1.15rem;
+      }
+
+      .jump-cat-layout {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
       }
     }
   </style>
@@ -43,7 +80,15 @@
   </header>
 
   <main class="jump-cat-main">
-    <video class="tile-video" autoplay muted loop playsinline poster="../thumbs/jump-cat.jpg" src="../thumbs/jump-cat.mp4"></video>
+    <div class="jump-cat-layout">
+      <video class="tile-video" autoplay muted loop playsinline poster="../thumbs/jump-cat.jpg" src="../thumbs/jump-cat.mp4"></video>
+      <aside class="jump-cat-copy">
+        <img class="jump-cat-logo" src="../thumbs/jump-cat.jpg" alt="Jump Cat! logo">
+        <h1>Jump Cat! (personal project)</h1>
+        <p>I art-directed this one. Character, animation, and the software all moved forward with Grok Bot, Gemini, and ChatGPT — I gave the direction (especially to Grok Bot) and steered the look and feel.</p>
+        <p>This is the first app I built with AI — and definitely not the last.</p>
+      </aside>
+    </div>
   </main>
 
   <script src="../js/site.js"></script>
