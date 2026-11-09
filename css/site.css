@@ -611,3 +611,10 @@ button {
     margin-bottom: 1rem;
   }
 }
+
+/* Private slot animation showcase */
+.slot-entry { position: relative; overflow: hidden; }
+.slot-entry .slot-entry-cover { filter: blur(5px) brightness(.45); transform: scale(1.05); }
+.slot-entry .tile-label { display: flex; flex-direction: column; gap: .25rem; }
+.slot-entry .tile-label small { font-size: .7rem; font-weight: 400; opacity: .8; }
+.slot-entry-lock { position: absolute; top: 1rem; right: 1rem; color: #e8e2d8; border: 1px solid #e8e2d866; border-radius: 50%; width: 2rem; height: 2rem; display: grid; place-items: center; }
