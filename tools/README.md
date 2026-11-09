@@ -22,3 +22,5 @@ node tools/build-showcase.mjs
 Expected source filenames are listed in `prepare-showcase.py`. Video source links can expire, so refresh the saved page if a new download fails. YouTube videos already embedded in the Behance presentations remain embedded players inside the unlocked page.
 
 Encryption uses PBKDF2-HMAC-SHA-256 (600,000 iterations, random 16-byte salt) and AES-256-GCM (random 12-byte nonce per file). Keys and decrypted media live only in the browser session; locking clears the gallery, stops media and revokes object URLs. Serve through HTTPS or localhost. This is a shared-password portfolio, with no visitor accounts or server-side access revocation.
+
+Projects are displayed in manifest order, newest first. For future additions, retain the existing private manifest and prepend the new project; do not rebuild from an incomplete collection of HTML exports. The extractor fails before replacing the manifest if a required source is missing.

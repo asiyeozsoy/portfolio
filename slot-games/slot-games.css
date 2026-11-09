@@ -44,3 +44,5 @@
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #d6bd97; outline-offset: 5px; }
 @media (max-width: 600px) { .slot-main { padding-top: 1rem; } .slot-heading { margin-top: 2rem; } .gate { min-height: 530px; padding: 1.2rem; } .gate-panel { padding: 1.5rem; } .gate-art { grid-template-columns: repeat(2, 1fr); } .project summary { gap: 1rem; } .project summary img { width: 85px; } .media-row { grid-template-columns: repeat(min(var(--columns), 2), minmax(0,1fr)); } .slot-footer { flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.youtube-link { display: inline-block; margin: 0 0 1rem; }

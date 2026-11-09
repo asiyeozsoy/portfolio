@@ -24,7 +24,7 @@
     const controller = new AbortController();
     jobs.add(controller);
     try {
-      const response = await fetch(path, { signal: controller.signal });
+      const response = await fetch(path, { signal: controller.signal, cache: path.endsWith('manifest.bin') ? 'no-store' : 'default' });
       if (!response.ok) throw new Error('Portfolio content is unavailable. Please try again later.');
       return new Uint8Array(await response.arrayBuffer());
     } finally { jobs.delete(controller); }
@@ -61,11 +61,19 @@
       if (media.tagName === 'VIDEO') {
         media.controls = true;
         media.playsInline = true;
-        media.preload = 'metadata';
+        media.preload = 'auto';
+        // Decode an actual frame so paused previews do not stay black.
+        media.addEventListener('loadedmetadata', () => {
+          if (media.currentTime === 0 && media.duration > .1) media.currentTime = .1;
+        }, { once: true });
         media.controlsList = 'nodownload';
       } else { media.alt = asset.alt || 'Animation showcase'; }
       media.src = url;
-      media.addEventListener('error', () => { loading.textContent = 'This preview could not be played.'; holder.prepend(loading); }, { once: true });
+      media.addEventListener('error', () => {
+        loading.textContent = 'This preview could not be played. Close and reopen this project to retry.';
+        holder.prepend(loading);
+        holder.dataset.failed = 'true';
+      }, { once: true });
       holder.replaceChildren(media);
       if (asset.caption) holder.append(element('figcaption', asset.caption));
     } catch (error) {
@@ -114,14 +122,21 @@
           if (url.protocol !== 'https:') return;
           if (['www.youtube.com', 'www.youtube-nocookie.com'].includes(url.hostname) && /^\/embed\/[\w-]+$/.test(url.pathname)) {
             const frame = element('iframe', '', 'showcase-embed');
+            url.search = '';
+            url.searchParams.set('playsinline', '1');
+            url.searchParams.set('rel', '0');
             frame.src = url.href;
             frame.dataset.embedSrc = url.href;
             frame.title = project.title + ' — featured video';
             frame.loading = 'lazy';
-            frame.allow = 'fullscreen; picture-in-picture';
+            frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
             frame.referrerPolicy = 'strict-origin-when-cross-origin';
             frame.allowFullscreen = true;
-            body.append(frame);
+            const watch = element('a', 'Watch on YouTube ↗', 'access-link youtube-link');
+            watch.href = 'https://www.youtube.com/watch?v=' + url.pathname.split('/').pop();
+            watch.target = '_blank';
+            watch.rel = 'noopener noreferrer';
+            body.append(frame, watch);
             return;
           }
           const link = element('a', row.label || 'Watch video ↗', 'access-link');

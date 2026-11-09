@@ -53,11 +53,10 @@ def video(module):
     return {'assets': [{'url': html.unescape(match[1].replace('\\/', '/')), 'mime': 'video/mp4', 'caption': PlainText(module.get('caption')).text()}]}
 
 result = {'projects': []}
-for slug, title, cover in PROJECTS:
+for slug, title, cover in reversed(PROJECTS):
     path = SOURCES / (slug + '.html')
     if not path.exists():
-        print('Missing source:', title)
-        continue
+        raise FileNotFoundError('Missing source: ' + title + '. Existing manifest was not changed.')
     source = path.read_text()
     match = re.search(r'<script type="application/json" id="beconfig-store_state">(.*?)</script>', source, re.S)
     project = json.loads(match[1])['project']['project']
